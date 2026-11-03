@@ -1,32 +1,512 @@
 <!DOCTYPE html>
-<html lang="es" class="dark">
+<html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Proyectos Eléctricos | IPE3</title>
-  <link rel="icon" type="image/x-icon" href="static/icons/favicon.ico">
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a0c10">
+  <meta name="description" content="Diseño, planificación y ejecución de proyectos eléctricos industriales y comerciales. IPE3 Engineering, Quito, Ecuador.">
+
+  <title>Proyectos Eléctricos | IPE3 Engineering</title>
+
+  <link rel="icon" href="./static/icons/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      color-scheme: dark;
+      --primary: #00d2ff;
+      --background: #0a0c10;
+      --text: #e2e8f0;
+      --muted: #adb9cc;
+      --border: #ffffff22;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--background);
+      color: var(--text);
+      font-family: "Space Grotesk", Arial, sans-serif;
+      line-height: 1.65;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--primary);
+      outline-offset: 5px;
+    }
+
+    .container {
+      width: min(1100px, calc(100% - 36px));
+      margin-inline: auto;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      background: #101722;
+    }
+
+    .navigation {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      padding-block: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand img {
+      width: 54px;
+      height: 54px;
+      object-fit: contain;
+    }
+
+    .brand strong {
+      display: block;
+      font-size: 19px;
+    }
+
+    .brand small {
+      display: block;
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: 1px;
+    }
+
+    .accent {
+      color: var(--primary);
+    }
+
+    .back-link {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+      padding: 90px 0;
+      background: radial-gradient(
+        ellipse at top right,
+        #153556,
+        #0a0c10 75%
+      );
+    }
+
+    .stars {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .star {
+      position: absolute;
+      left: var(--left);
+      top: var(--top);
+      width: var(--size);
+      height: var(--size);
+      border-radius: 50%;
+      background: #eafcff;
+      box-shadow: 0 0 8px var(--primary);
+      opacity: .5;
+      animation:
+        drift var(--duration) linear infinite alternate,
+        glow 4s ease-in-out infinite alternate;
+      animation-delay: var(--delay);
+    }
+
+    @keyframes drift {
+      from {
+        transform: translate(-25px, 40px);
+      }
+      to {
+        transform: translate(45px, -60px);
+      }
+    }
+
+    @keyframes glow {
+      from {
+        opacity: .15;
+      }
+      to {
+        opacity: .8;
+      }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 7px 14px;
+      color: var(--primary);
+      background: #00d2ff10;
+      border: 1px solid #00d2ff44;
+      border-radius: 30px;
+      font-size: 12px;
+      letter-spacing: 1px;
+    }
+
+    h1 {
+      margin: 24px 0;
+      font-size: clamp(38px, 7vw, 70px);
+      line-height: 1.1;
+    }
+
+    .hero p {
+      color: var(--muted);
+      max-width: 680px;
+      font-size: 19px;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 30px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 12px 22px;
+      border-radius: 10px;
+      background: var(--primary);
+      color: #081018;
+      font-weight: 700;
+      text-align: center;
+      border: 1px solid transparent;
+      transition: transform .2s, background .2s;
+    }
+
+    .button:hover {
+      background: #77e7ff;
+      transform: translateY(-3px);
+    }
+
+    .button-outline {
+      background: #ffffff05;
+      color: white;
+      border-color: var(--border);
+    }
+
+    .button-outline:hover {
+      background: #ffffff15;
+    }
+
+    .section {
+      padding: 65px 0;
+    }
+
+    h2 {
+      font-size: clamp(27px, 4vw, 38px);
+      line-height: 1.2;
+    }
+
+    .intro {
+      max-width: 750px;
+      color: var(--muted);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 22px;
+      margin-top: 30px;
+    }
+
+    .card {
+      padding: 26px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: #ffffff04;
+    }
+
+    .card h3 {
+      margin-top: 0;
+      color: var(--primary);
+      font-size: 20px;
+    }
+
+    .card p {
+      color: var(--muted);
+      margin-bottom: 0;
+    }
+
+    .contact {
+      background: #121b29;
+      border-block: 1px solid var(--border);
+    }
+
+    .contact p {
+      color: var(--muted);
+    }
+
+    footer {
+      padding: 28px 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .footer-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 700px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding: 65px 0;
+      }
+
+      .brand strong {
+        font-size: 16px;
+      }
+
+      .brand img {
+        width: 44px;
+        height: 44px;
+      }
+
+      .back-link {
+        font-size: 14px;
+      }
+    }
+
+    @media (max-width: 450px) {
+      .navigation {
+        flex-wrap: wrap;
+      }
+
+      .actions {
+        flex-direction: column;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
 </head>
 
-<body class="bg-black text-white">
+<body>
+  <header>
+    <nav class="navigation container" aria-label="Navegación">
+      <a class="brand" href="./index.html">
+        <img
+          src="./static/img/ipe3-logo.png"
+          alt=""
+          width="54"
+          height="54"
+        >
+        <span>
+          <strong>
+            IPE3® <span class="accent">Engineering</span>
+          </strong>
+          <small>BY CORPORACIÓN 360</small>
+        </span>
+      </a>
 
-<div class="min-h-screen flex items-center justify-center text-center px-6">
+      <a class="back-link" href="./index.html">
+        ← Volver al inicio
+      </a>
+    </nav>
+  </header>
 
-  <div>
-    <h1 class="text-5xl font-bold mb-6 text-primary">
-      Proyectos Eléctricos
-    </h1>
+  <main>
+    <section class="hero">
+      <div class="stars" id="stars" aria-hidden="true"></div>
 
-    <p class="text-slate-400 max-w-2xl">
-      Diseño, planificación y ejecución de infraestructura eléctrica industrial y comercial.
-    </p>
+      <div class="container">
+        <div class="hero-content">
+          <span class="badge">INGENIERÍA ELÉCTRICA · ECUADOR</span>
 
-    <a href="{{ url_for('home') }}"
-       class="mt-10 inline-block bg-primary text-black px-8 py-3 rounded-xl font-bold hover:bg-white transition">
-       Volver al Inicio
-    </a>
-  </div>
+          <h1>
+            Proyectos <span class="accent">eléctricos</span>
+          </h1>
 
-</div>
+          <p>
+            Diseño, planificación y ejecución de infraestructura
+            eléctrica industrial y comercial.
+          </p>
 
+          <p>
+            Cuéntanos qué necesitas para definir el alcance,
+            los materiales y las condiciones de tu proyecto.
+          </p>
+
+          <div class="actions">
+            <a class="button" href="./index.html#cotizacion">
+              Solicitar cotización
+            </a>
+
+            <a class="button button-outline" href="./index.html">
+              Volver al inicio
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <h2>¿Cómo desarrollamos tu proyecto?</h2>
+
+        <p class="intro">
+          El alcance y el presupuesto se establecen según
+          las necesidades y condiciones de cada instalación.
+        </p>
+
+        <div class="grid">
+          <article class="card">
+            <h3>1. Evaluación</h3>
+            <p>
+              Revisamos tu requerimiento y determinamos
+              si se necesita una visita técnica.
+            </p>
+          </article>
+
+          <article class="card">
+            <h3>2. Planificación</h3>
+            <p>
+              Definimos el alcance, los materiales,
+              las actividades y el presupuesto.
+            </p>
+          </article>
+
+          <article class="card">
+            <h3>3. Ejecución y entrega</h3>
+            <p>
+              Acordamos la instalación, las pruebas
+              y las condiciones de entrega del trabajo.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section contact">
+      <div class="container">
+        <h2>Conversemos sobre tu instalación</h2>
+
+        <p>
+          Base en Quito, Ecuador. La disponibilidad,
+          los plazos y las garantías se confirman
+          en la cotización.
+        </p>
+
+        <div class="actions">
+          <a
+            class="button"
+            href="https://wa.me/593984016027?text=Hola%2C%20IPE3%20Engineering.%20Necesito%20una%20cotizaci%C3%B3n%20para%20un%20proyecto%20el%C3%A9ctrico."
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Consultar por WhatsApp
+          </a>
+
+          <a
+            class="button button-outline"
+            href="tel:+593984016027"
+          >
+            Llamar
+          </a>
+
+          <a
+            class="button button-outline"
+            href="mailto:ipe3ecuador@gmail.com"
+          >
+            Escribir por correo
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-row">
+      <span>
+        © <span id="year">2026</span>
+        IPE3® Engineering · Corporación 360
+      </span>
+
+      <a href="./index.html">Volver al inicio ↑</a>
+    </div>
+  </footer>
+
+  <script>
+    const starsContainer = document.getElementById("stars");
+    const fragment = document.createDocumentFragment();
+
+    for (let starIndex = 0; starIndex < 55; starIndex++) {
+      const star = document.createElement("span");
+
+      star.className = "star";
+
+      star.style.setProperty(
+        "--left",
+        Math.random() * 100 + "%"
+      );
+
+      star.style.setProperty(
+        "--top",
+        Math.random() * 100 + "%"
+      );
+
+      star.style.setProperty(
+        "--size",
+        1 + Math.random() * 2 + "px"
+      );
+
+      star.style.setProperty(
+        "--duration",
+        12 + Math.random() * 18 + "s"
+      );
+
+      star.style.setProperty(
+        "--delay",
+        -Math.random() * 30 + "s"
+      );
+
+      fragment.appendChild(star);
+    }
+
+    starsContainer.appendChild(fragment);
+
+    document.getElementById("year").textContent =
+      new Date().getFullYear();
+  </script>
 </body>
 </html>
