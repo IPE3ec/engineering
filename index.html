@@ -1,408 +1,714 @@
 <!DOCTYPE html>
-<html class="dark" lang="es">
+<html lang="es">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>IPE3® Engineering </title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a0c10">
+  <meta name="description" content="IPE3 Engineering: ingeniería eléctrica, domótica, seguridad electrónica y mantenimiento de equipos en Quito, Ecuador. Solicita tu cotización.">
+  <meta property="og:title" content="IPE3® Engineering | Corporación 360">
+  <meta property="og:description" content="Soluciones de ingeniería eléctrica, automatización, seguridad y mantenimiento en Ecuador.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ipe3ec.github.io/engineering/">
+  <meta property="og:image" content="https://ipe3ec.github.io/engineering/static/img/hero-bg.jpg">
+  <title>IPE3® Engineering | Ingeniería y seguridad en Ecuador</title>
 
-<!-- Favicon -->
-<link rel="icon" type="image/x-icon" href="./static/icons/favicon.ico">
+  <link rel="canonical" href="https://ipe3ec.github.io/engineering/">
+  <link rel="icon" href="./static/icons/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<!-- Tailwind CDN -->
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <style>
+    :root {
+      color-scheme: dark;
+      --primary: #00d2ff;
+      --accent: #0072ff;
+      --background: #0a0c10;
+      --panel: #131925;
+      --text: #e2e8f0;
+      --muted: #a8b4c7;
+      --border: #ffffff1f;
+    }
 
-<!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 110px; }
+    body {
+      margin: 0;
+      background: var(--background);
+      color: var(--text);
+      font-family: "Space Grotesk", Arial, sans-serif;
+      line-height: 1.6;
+    }
 
-<!-- CSS -->
-<link rel="stylesheet" href="./styles.css">
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+    button, input, select, textarea { font: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    :focus-visible { outline: 3px solid var(--primary); outline-offset: 5px; }
+    [hidden] { display: none !important; }
 
-<!-- Tailwind Config -->
-<script>
-tailwind.config = {
-darkMode: "class",
-theme: {
-extend: {
-colors: {
-primary: "#00d2ff",
-"accent-blue": "#0072ff",
-"deep-charcoal": "#0a0c10",
-"slate-dark": "#1a1f2e"
-},
-fontFamily: { display: ["Space Grotesk"] },
-animation: {
-'ken-burns': 'kenburns 20s ease infinite alternate'
-},
-keyframes: {
-kenburns: {
-'0%': { transform: 'scale(1)' },
-'100%': { transform: 'scale(1.1)' }
-}
-}
-}
-}
-}
-</script>
+    .container { width: min(1180px, calc(100% - 40px)); margin: auto; }
+    .muted { color: var(--muted); }
+    .accent { color: var(--primary); }
+    .section { padding: 85px 0; }
+    .section-title { font-size: clamp(28px, 4vw, 42px); margin: 0 0 18px; }
+    .intro { max-width: 720px; color: var(--muted); margin-bottom: 35px; }
+    .grid { display: grid; gap: 24px; }
+    .grid-four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .grid-three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid-two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+    .skip {
+      position: absolute;
+      top: -100px;
+      left: 12px;
+      background: var(--primary);
+      color: #081018;
+      padding: 12px;
+      z-index: 100;
+    }
+    .skip:focus { top: 12px; }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 12px 22px;
+      border-radius: 10px;
+      border: 1px solid transparent;
+      background: var(--primary);
+      color: #081018;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+      transition: transform .2s, background .2s;
+    }
+    .button:hover { transform: translateY(-2px); background: #69e5ff; }
+    .button-outline { background: #ffffff08; color: white; border-color: var(--border); }
+    .button-outline:hover { background: #ffffff14; }
+    .actions { display: flex; gap: 14px; flex-wrap: wrap; }
+
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: #0a0c10f2;
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+    .navigation {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 94px;
+      gap: 20px;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand img { width: 60px; height: 60px; object-fit: contain; }
+    .brand strong { display: block; font-size: 20px; }
+    .brand small { display: block; color: var(--muted); font-size: 10px; letter-spacing: 1.5px; }
+    .menu { display: flex; align-items: center; gap: 22px; }
+    .menu a:hover, .footer a:hover { color: var(--primary); }
+    .menu .button:hover { color: #081018; }
+    .menu-toggle {
+      display: none;
+      background: transparent;
+      color: white;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      min-width: 48px;
+      min-height: 48px;
+      cursor: pointer;
+    }
+
+    .hero {
+      position: relative;
+      min-height: 680px;
+      min-height: min(850px, calc(100svh - 94px));
+      display: flex;
+      align-items: center;
+      isolation: isolate;
+      overflow: hidden;
+      padding: 70px 0;
+    }
+    .hero-image {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -2;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, #0a0c10fa, #0a0c10bb 60%, #0a0c1066);
+      z-index: -1;
+    }
+    .hero-content { max-width: 780px; }
+    .badge {
+      display: inline-block;
+      border: 1px solid #00d2ff55;
+      background: #00d2ff12;
+      color: var(--primary);
+      border-radius: 30px;
+      padding: 7px 15px;
+      font-size: 12px;
+      letter-spacing: 1px;
+    }
+    h1 { font-size: clamp(38px, 6vw, 74px); line-height: 1.1; margin: 24px 0; }
+    .gradient {
+      color: var(--primary);
+      background: linear-gradient(100deg, var(--primary), #519cff);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero p { font-size: clamp(17px, 2vw, 21px); color: #c0cad9; max-width: 650px; }
+
+    .brands {
+      border-block: 1px solid var(--border);
+      background: #151c29;
+      padding: 22px 0;
+      text-align: center;
+    }
+    .brands p { font-size: 12px; color: var(--muted); margin: 0 0 16px; }
+    .brand-list { display: flex; justify-content: center; flex-wrap: wrap; gap: 18px 32px; font-weight: 700; }
+
+    .services { background: radial-gradient(ellipse at top right, #1a2333, #0a0c10 75%); }
+    .card {
+      background: #ffffff05;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 26px;
+    }
+    a.card { transition: transform .2s, border-color .2s; }
+    a.card:hover { transform: translateY(-5px); border-color: var(--primary); }
+    .service-icon { color: var(--primary); font-size: 32px; font-weight: 700; }
+    .card h3 { font-size: 20px; margin: 16px 0 10px; }
+    .card p { color: var(--muted); font-size: 15px; }
+    .card-link { display: inline-block; margin-top: 12px; color: var(--primary); font-weight: 600; }
+
+    .project { margin: 0; border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+    .project img { width: 100%; aspect-ratio: 4/3; object-fit: cover; }
+    .project figcaption { padding: 18px; color: var(--muted); }
+    .about { background: #121925; }
+    .about ul { padding-left: 22px; color: var(--muted); }
+    .about li { margin-bottom: 14px; }
+
+    .contact-grid { display: grid; grid-template-columns: .8fr 1.2fr; gap: 35px; }
+    .contact-details { overflow-wrap: anywhere; }
+    .contact-details a { color: var(--primary); }
+    .contact-details address { font-style: normal; color: var(--muted); }
+    .form { background: var(--panel); border: 1px solid var(--border); padding: 28px; border-radius: 16px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 18px; }
+    input, select, textarea {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin-top: 7px;
+      background: #0a0f18;
+      border: 1px solid #435066;
+      color: white;
+      border-radius: 8px;
+    }
+    textarea { resize: vertical; min-height: 130px; }
+    .consent { display: flex; gap: 10px; align-items: flex-start; font-weight: 400; }
+    .consent input { width: 20px; min-width: 20px; margin-top: 3px; }
+    .form-note { font-size: 13px; color: var(--muted); }
+    .status { color: var(--primary); }
+
+    .footer { border-top: 1px solid var(--border); padding: 36px 0; color: var(--muted); }
+    .footer-inner { display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+    .footer-links { display: flex; gap: 20px; flex-wrap: wrap; }
+    .privacy { margin-top: 25px; font-size: 13px; max-width: 850px; }
+
+    @media (max-width: 1050px) {
+      .menu { gap: 14px; font-size: 14px; }
+      .brand strong { font-size: 17px; }
+      .grid-four { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 850px) {
+      .menu-toggle { display: block; }
+      .menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        padding: 20px;
+        background: #101724;
+        border-bottom: 1px solid var(--border);
+        flex-direction: column;
+        align-items: stretch;
+        max-height: calc(100svh - 94px);
+        overflow-y: auto;
+      }
+      .menu.is-open { display: flex; }
+      .menu a { padding: 10px; }
+      .hero { min-height: 650px; }
+      .grid-three { grid-template-columns: 1fr; }
+      .grid-two, .contact-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 500px) {
+      .container { width: calc(100% - 28px); }
+      .section { padding: 55px 0; }
+      .brand img { width: 46px; height: 46px; }
+      .brand strong { font-size: 16px; }
+      .brand small { font-size: 8px; }
+      .grid-four, .form-row { grid-template-columns: 1fr; }
+      .hero { min-height: auto; padding: 65px 0; }
+      .hero .actions { flex-direction: column; }
+      .form { padding: 20px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition: none !important; animation: none !important; }
+    }
+  </style>
 </head>
 
-<body class="bg-deep-charcoal text-slate-200 font-display selection:bg-primary/30">
+<body>
+  <a class="skip" href="#contenido">Saltar al contenido</a>
 
-<!-- HEADER -->
-<header class="fixed top-0 w-full z-50 bg-deep-charcoal/80 backdrop-blur-lg border-b border-white/5">
-<nav class="container mx-auto px-7 py-5 flex items-center justify-between">
-<div class="flex items-center gap-3">
-<img src="./static/img/ipe3-logo.png"
-     class="w-16 h-16 object-contain logo-animate"
-     alt="IPE3 Logo">
-<div class="flex flex-col">
-<span class="text-xl font-bold text-white">IPE3® <span class="text-primary font-light">Engineering</span></span>
-<span class="text-[11px] uppercase tracking-widest text-slate-400 font-bold">by CORPORACIÓN 360</span>
-</div>
-</div>
-<div class="hidden md:flex items-center space-x-8">
+  <header class="header">
+    <nav class="navigation container" aria-label="Navegación principal">
+      <a class="brand" href="#inicio" aria-label="IPE3 Engineering, inicio">
+        <img src="./static/img/ipe3-logo.png" alt="" width="60" height="60">
+        <span>
+          <strong>IPE3® <span class="accent">Engineering</span></strong>
+          <small>BY CORPORACIÓN 360</small>
+        </span>
+      </a>
 
-    <a href="#" class="hover:text-primary transition">Inicio</a>
-    <a class="text-sm font-medium text-slate-300 hover:text-primary transition-colors" href="servicios.html">Servicios</a>
-    <a href="#proyectos" class="hover:text-primary transition">Proyectos</a>
-    <a href="#nosotros" class="hover:text-primary transition">Nosotros</a>
-    <a href="#contacto" class="hover:text-primary transition">Contacto</a>
+      <button
+        class="menu-toggle"
+        id="menu-toggle"
+        type="button"
+        aria-controls="menu"
+        aria-expanded="false"
+        aria-label="Abrir menú"
+        hidden
+      >☰</button>
 
-    <!-- BOTÓN -->
-    <a href="#contacto"
-       class="ml-4 bg-primary text-deep-charcoal px-6 py-2.5 
-              rounded-lg font-semibold text-sm
-              hover:scale-105 hover:shadow-lg hover:shadow-primary/30
-              transition-all duration-300">
+      <div class="menu" id="menu">
+        <a href="#inicio">Inicio</a>
+        <a href="#servicios">Servicios</a>
+        <a href="#proyectos">Proyectos</a>
+        <a href="#nosotros">Nosotros</a>
+        <a href="#contacto">Contacto</a>
+        <a class="button" href="#cotizacion">Solicitar cotización</a>
+      </div>
+    </nav>
+    <noscript>
+      <div class="container">
+        <a href="#servicios">Servicios</a> ·
+        <a href="#proyectos">Proyectos</a> ·
+        <a href="#nosotros">Nosotros</a> ·
+        <a href="#contacto">Contacto</a>
+      </div>
+    </noscript>
+  </header>
 
-        Solicitar Cotización
-    </a>
+  <main id="contenido">
+    <section class="hero" id="inicio">
+      <img
+        class="hero-image"
+        src="./static/img/hero-bg.jpg"
+        alt=""
+        fetchpriority="high"
+      >
+      <div class="container">
+        <div class="hero-content">
+          <span class="badge">QUITO · ECUADOR</span>
+          <h1>Ingeniería eléctrica con <span class="gradient">precisión digital</span></h1>
+          <p>
+            Soluciones integrales de automatización, seguridad electrónica
+            y mantenimiento. IPE3® Engineering, by Corporación 360.
+          </p>
+          <div class="actions">
+            <a class="button" href="#cotizacion">Solicitar cotización</a>
+            <a class="button button-outline" href="#servicios">Explorar servicios</a>
+          </div>
+        </div>
+      </div>
+    </section>
 
-</div>
-</nav>
-</header>
+    <section class="brands" aria-label="Marcas mencionadas">
+      <div class="container">
+        <p>TECNOLOGÍA PARA TUS PROYECTOS · DISPONIBILIDAD SUJETA A COTIZACIÓN</p>
+        <div class="brand-list">
+          <span>DAHUA</span>
+          <span>HIKVISION</span>
+          <span>SIEMENS</span>
+          <span>SCHNEIDER</span>
+          <span>ABB</span>
+          <span>EATON</span>
+        </div>
+      </div>
+    </section>
 
-<!-- HERO -->
-    
-<section class="relative h-screen flex items-center overflow-hidden">
-<div class="absolute inset-0">
-<img src="./static/img/hero-bg.jpg" class="w-full h-full object-cover scale-105 animate-ken-burns" alt="Hero">
-<div class="absolute inset-0 bg-gradient-to-r from-deep-charcoal via-deep-charcoal/80 to-transparent"></div>
-</div>
-
-<div class="container mx-auto px-6 relative z-10">
-<div class="max-w-3xl">
-<span class="inline-block px-4 py-1.5 bg-primary/10 border border-primary/20 text-primary text-xs font-bold tracking-widest uppercase rounded-full mb-6">
-Expertos en Quito, Ecuador
-</span>
-<h1 class="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
-Ingeniería Eléctrica con
-<span class="bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent-blue">
-Precisión Digital
-</span>
-</h1>
-<p class="text-xl text-slate-400 mb-10 max-w-2xl">
-Soluciones integrales de automatización, seguridad y mantenimiento industrial. Respaldados por 
-<span class="text-white font-semibold">by CORPORACIÓN 360</span>.
-</p>
-     <!-- BOTONES HERO -->
-<div class="flex flex-col sm:flex-row gap-6 mt-2">
-
-    <!-- Explorar Proyectos -->
-    <a href="#proyectos"
-       class="bg-primary text-deep-charcoal px-8 py-4 rounded-xl font-semibold text-lg 
-              hover:scale-105 hover:shadow-lg hover:shadow-primary/30 
-              transition-all duration-300 text-center">
-
-        Explorar Proyectos
-    </a>
-
-    <!-- Nuestros Servicios -->
-    <a href="#servicios"
-       class="px-8 py-4 rounded-xl font-semibold text-lg 
-              bg-white/5 border border-white/10 text-white
-              hover:bg-white/10 hover:scale-105 
-              transition-all duration-300 text-center">
-
-        Nuestros Servicios
-    </a>
-
-</div>
-</div>
-</div>
-</section>
-
-<!-- SERVICIOS -->
-      <section class="py-4 bg-slate-dark border-y border-white/5 overflow-hidden">
-
-    <div class="container mx-auto px-6 mb-3">
-        <p class="text-center text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500">
-            Equipamiento Industrial & Tecnológico de Clase Mundial
+    <section class="section services" id="servicios">
+      <div class="container">
+        <h2 class="section-title">Nuestras especialidades</h2>
+        <p class="intro">
+          Cuéntanos qué necesitas y definiremos el alcance técnico
+          y los materiales adecuados para tu proyecto.
         </p>
-    </div>
 
-    <div class="relative overflow-hidden">
-        <div class="flex gap-20 items-center whitespace-nowrap animate-marquee">
+        <div class="grid grid-four">
+          <a class="card" href="./proyectos-electricos.html">
+            <span class="service-icon" aria-hidden="true">ϟ</span>
+            <h3>Proyectos eléctricos</h3>
+            <p>Diseño, planificación e infraestructura eléctrica industrial y comercial.</p>
+            <span class="card-link">Ver servicio →</span>
+          </a>
 
-            <div class="flex gap-20 items-center shrink-0">
-                <div class="text-2xl font-bold text-white/20 px-8">ALCON</div>
-                <div class="text-2xl font-bold text-white/20 px-8">DAHUA</div>
-                <div class="text-2xl font-bold text-white/20 px-8">HIKVISION</div>
-                <div class="text-2xl font-bold text-white/20 px-8">CENTURION</div>
-                <div class="text-2xl font-bold text-white/20 px-8">SIEMENS</div>
-            </div>
+          <a class="card" href="./domotica-avanzada.html">
+            <span class="service-icon" aria-hidden="true">⌂</span>
+            <h3>Domótica avanzada</h3>
+            <p>Automatización e integración inteligente para hogares y espacios de trabajo.</p>
+            <span class="card-link">Ver servicio →</span>
+          </a>
 
-            <!-- DUPLICADO PARA LOOP -->
-            <div class="flex gap-20 items-center shrink-0">
-                <div class="text-2xl font-bold text-white/20 px-8">SCHNEIDER</div>
-                <div class="text-2xl font-bold text-white/20 px-8">SIEMENS</div>
-                <div class="text-2xl font-bold text-white/20 px-8">HIKVISION</div>
-                <div class="text-2xl font-bold text-white/20 px-8">ABB</div>
-                <div class="text-2xl font-bold text-white/20 px-8">EATON</div>
-            </div>
+          <a class="card" href="./seguridad-electronica.html">
+            <span class="service-icon" aria-hidden="true">◉</span>
+            <h3>Seguridad electrónica</h3>
+            <p>Videovigilancia, alarmas y control de accesos según las necesidades del sitio.</p>
+            <span class="card-link">Ver servicio →</span>
+          </a>
 
+          <a class="card" href="./mantenimiento-medico.html">
+            <span class="service-icon" aria-hidden="true">✚</span>
+            <h3>Mantenimiento médico</h3>
+            <p>Evaluación y soporte de equipos, sujetos a diagnóstico y alcance técnico.</p>
+            <span class="card-link">Ver servicio →</span>
+          </a>
         </div>
-    </div>
 
-</section>
-<section id="servicios" class="py-24 relative dark-gradient-bg">
-<div class="container mx-auto px-6">
-<div class="text-center mb-16">
-<h2 class="text-4xl font-bold text-white">Nuestras Especialidades</h2>
-<div class="w-20 h-1.5 bg-gradient-to-r from-primary to-accent-blue mx-auto mt-4 rounded-full"></div>
-</div>
-
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-
-<div class="group glass-panel p-8 rounded-2xl hover:-translate-y-2 transition-all duration-500 cursor-pointer" data-link="proyectos-electricos.html">
-    <div class="w-16 h-16 bg-primary/10 rounded-xl flex items-center justify-center mb-6">
-        <span class="material-icons text-primary text-3xl">bolt</span>
-    </div>
-    <h3 class="text-xl font-bold mb-3 text-white">Proyectos Eléctricos</h3>
-    <p class="text-slate-400 text-sm">Infraestructura eléctrica certificada.</p>
-</div>
-
-<div class="group glass-panel p-8 rounded-2xl hover:-translate-y-2 transition-all duration-500 cursor-pointer" data-link="domotica-avanzada.html">
-    <div class="w-16 h-16 bg-primary/10 rounded-xl flex items-center justify-center mb-6">
-        <span class="material-symbols-outlined text-primary text-3xl">home_max_dots</span>
-    </div>
-    <h3 class="text-xl font-bold mb-3 text-white">Domótica Avanzada</h3>
-    <p class="text-slate-400 text-sm">Integración inteligente de espacios.</p>
-</div>
-
-<div class="group glass-panel p-8 rounded-2xl hover:-translate-y-2 transition-all duration-500 cursor-pointer" data-link="seguridad-electronica.html">
-    <div class="w-16 h-16 bg-primary/10 rounded-xl flex items-center justify-center mb-6">
-        <span class="material-icons text-primary text-3xl">videocam</span>
-    </div>
-    <h3 class="text-xl font-bold mb-3 text-white">Seguridad Electrónica</h3>
-    <p class="text-slate-400 text-sm">CCTV y control de accesos.</p>
-</div>
-
-<div class="group glass-panel p-8 rounded-2xl hover:-translate-y-2 transition-all duration-500 cursor-pointer" data-link="mantenimiento-medico.html">
-    <div class="w-16 h-16 bg-primary/10 rounded-xl flex items-center justify-center mb-6">
-        <span class="material-icons text-primary text-3xl">medical_services</span>
-    </div>
-    <h3 class="text-xl font-bold mb-3 text-white">Mantenimiento Médico</h3>
-    <p class="text-slate-400 text-sm">Soporte hospitalario especializado.</p>
-</div>
-
-</div>
-</div>
-</section>
-
-<!-- PROYECTOS -->
-<section id="proyectos" class="py-24 bg-deep-charcoal">
-<div class="container mx-auto px-6">
-<h2 class="text-4xl font-bold text-white text-center mb-16">Proyectos Destacados</h2>
-
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-
-<div class="group relative rounded-2xl overflow-hidden aspect-[4/5] border border-white/5">
-<img src="./static/img/proyecto1.jpg" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="">
-</div>
-
-<div class="group relative rounded-2xl overflow-hidden aspect-[4/5] border border-white/5">
-<img src="./static/img/proyecto2.jpg" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="">
-</div>
-
-<div class="group relative rounded-2xl overflow-hidden aspect-[4/5] border border-white/5">
-<img src="./static/img/proyecto3.jpg" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="">
-</div>
-
-</div>
-</div>
-</section>
-<section class="py-4 bg-slate-900 border-y border-white/5 overflow-hidden">
-
-    <div class="container mx-auto px-6 mb-3">
-        <p class="text-center text-[10px] font-bold uppercase tracking-[0.3em] text-slate-400">
-            CLIENTES PREMIUN
+        <p style="margin-top:28px">
+          <a class="accent" href="./servicios.html">Consultar todos los servicios →</a>
         </p>
-    </div>
+      </div>
+    </section>
 
-    <div class="relative overflow-hidden">
-        <div class="flex gap-20 items-center whitespace-nowrap animate-marquee">
+    <section class="section" id="proyectos">
+      <div class="container">
+        <h2 class="section-title">Galería de proyectos</h2>
+        <p class="intro">
+          Conoce imágenes de nuestro portafolio y consulta
+          por trabajos relacionados con tu necesidad.
+        </p>
 
-            <div class="flex gap-20 items-center shrink-0">
-                <div class="text-2xl font-bold text-white/60 px-8">OPTICA'S GM</div>
-                <div class="text-2xl font-bold text-white/60 px-8">FUNDACIÓN VISTA PARA TODOS</div>
-                <div class="text-2xl font-bold text-white/60 px-8">OPTIKA JOSUE</div>
-                <div class="text-2xl font-bold text-white/60 px-8">CONJUNTO PLAN CHILLOGALLO</div>
-                <div class="text-2xl font-bold text-white/60 px-8">EMBAJADA EEUU</div>
-            </div>
+        <div class="grid grid-three">
+          <figure class="project">
+            <img src="./static/img/proyecto1.jpg" alt="Fotografía del portafolio IPE3, imagen 1" loading="lazy" decoding="async">
+            <figcaption>
+              <a class="accent" href="#cotizacion">Consultar por un proyecto similar →</a>
+            </figcaption>
+          </figure>
 
-            <div class="flex gap-20 items-center shrink-0">
-                <div class="text-2xl font-bold text-white/60 px-8">SCHNEIDER</div>
-                <div class="text-2xl font-bold text-white/60 px-8">SIEMENS</div>
-                <div class="text-2xl font-bold text-white/60 px-8">HIKVISION</div>
-                <div class="text-2xl font-bold text-white/60 px-8">ABB</div>
-                <div class="text-2xl font-bold text-white/60 px-8">EATON</div>
-            </div>
+          <figure class="project">
+            <img src="./static/img/proyecto2.jpg" alt="Fotografía del portafolio IPE3, imagen 2" loading="lazy" decoding="async">
+            <figcaption>
+              <a class="accent" href="#cotizacion">Solicitar evaluación técnica →</a>
+            </figcaption>
+          </figure>
 
+          <figure class="project">
+            <img src="./static/img/proyecto3.jpg" alt="Fotografía del portafolio IPE3, imagen 3" loading="lazy" decoding="async">
+            <figcaption>
+              <a class="accent" href="#cotizacion">Cuéntanos tu necesidad →</a>
+            </figcaption>
+          </figure>
         </div>
-    </div>
+      </div>
+    </section>
 
-</section>
-<!-- FOOTER -->
-<footer class="relative bg-deep-charcoal text-slate-400 py-20 border-t border-white/10" id="contacto">
-
-
-</div>
-    <div class="container mx-auto px-6 relative z-10">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
-
-            <!-- Logo y descripción -->
-            <div>
-                <div class="flex items-center gap-3 mb-8">
-                    <img src="./static/img/ipe3-logo.png"
-                         class="w-20 logo-animate"
-                         alt="IPE3® Logo">
-                    <div class="flex flex-col">
-                        <span class="text-xl font-bold tracking-tight text-white leading-tight">
-                            IPE3® <span class="text-primary font-light">Engineering</span>
-                        </span>
-                        <span class="text-[11px] uppercase tracking-wider text-slate-400 font-bold leading-none">
-                            by CORPORACIÓN 360
-                        </span>
-                    </div>
-                </div>
-
-                <p class="text-sm leading-relaxed mb-8 text-slate-400">
-                    Líderes en ingeniería eléctrica y electrónica en el Ecuador.
-                    Desarrollamos soluciones de alta tecnología con precisión milimétrica y seguridad garantizada.
-                </p>
-
-                <div class="flex gap-4">
-                    <a class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center hover:bg-primary hover:text-deep-charcoal transition-all border border-white/10" href="#">
-                        <span class="material-icons text-sm">facebook</span>
-                    </a>
-                    <a class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center hover:bg-primary hover:text-deep-charcoal transition-all border border-white/10" href="#">
-                        <span class="material-icons text-sm">camera_alt</span>
-                    </a>
-                    <a class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center hover:bg-primary hover:text-deep-charcoal transition-all border border-white/10" href="#">
-                        <span class="material-icons text-sm">alternate_email</span>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Empresa -->
-            <div>
-                <h4 class="text-white font-bold mb-8 uppercase tracking-widest text-xs">Empresa</h4>
-                <ul class="space-y-4 text-sm">
-                    <li><a class="hover:text-primary transition-colors" href="#">Inicio</a></li>
-                    <a class="text-sm font-medium text-slate-300 hover:text-primary transition-colors" href="servicios.html">Servicios</a>
-                    <li><a class="hover:text-primary transition-colors" href="#">Portafolio Proyectos</a></li>
-                    <li><a class="hover:text-primary transition-colors" href="#">Nuestra Historia</a></li>
-                    <li><a class="hover:text-primary transition-colors" href="#">Oportunidades</a></li>
-                </ul>
-            </div>
-
-            <!-- Soluciones -->
-            <div>
-                <h4 class="text-white font-bold mb-8 uppercase tracking-widest text-xs">Soluciones</h4>
-                <ul class="space-y-4 text-sm">
-                    <li><a class="hover:text-primary transition-colors" href="#">Automatización Industrial</a></li>
-                    <li><a class="hover:text-primary transition-colors" href="#">Cableado Inteligente</a></li>
-                    <li><a class="hover:text-primary transition-colors" href="#">Seguridad Contra Incendios</a></li>
-                    <li><a class="hover:text-primary transition-colors" href="#">Sistemas UPS & Energía</a></li>
-                    <li><a class="hover:text-primary transition-colors" href="#">Mantenimiento Predictivo</a></li>
-                </ul>
-            </div>
-
-            <!-- Contacto -->
-<div>
-    <h4 class="text-white font-bold mb-8 uppercase tracking-widest text-xs">
-        Contacto
-    </h4>
-
-    <ul class="space-y-6 text-sm mb-8">
-        <li class="flex gap-4">
-            <span class="material-icons text-primary text-xl">location_on</span>
-            <span class="text-slate-300">
-                Dirección: Cusubamba y Tendales, Quito, Ecuador
-            </span>
-        </li>
-
-        <li class="flex gap-4">
-            <span class="material-icons text-primary text-xl">phone</span>
-            <span class="text-slate-300">Teléfono: +593 9840 16027</span>
-        </li>
-
-        <li class="flex gap-4">
-            <span class="material-icons text-primary text-xl">email</span>
-            <span class="text-slate-300 font-bold">
-                Correo: ipe3ecuador@gmail.com
-            </span>
-        </li>
-    </ul>
-
-    <!-- BOTÓN SOLICITAR COTIZACIÓN -->
-    <a href="#"
-       class="inline-flex items-center justify-center gap-3 
-              bg-primary text-deep-charcoal 
-              px-6 py-3 rounded-xl 
-              font-bold uppercase tracking-wider text-xs 
-              hover:scale-105 hover:shadow-lg hover:shadow-primary/30 
-              transition-all duration-300">
-
-        <span class="material-icons text-base">bolt</span>
-        Solicitar Cotización
-    </a>
-
-</div>
-                                        
-        </div> <!-- FIN GRID -->
-
-        <!-- Créditos -->
-        <div class="border-t border-white/10 mt-16 pt-6">
-            <div class="flex justify-between items-center 
-                        text-[10px] uppercase tracking-[0.25em] 
-                        text-slate-500">
-
-                <p>
-                    © 2016 IPE3® Engineering by CORPORACIÓN 360
-                </p>
-
-                <div class="flex gap-12">
-                    <a href="#" class="hover:text-primary transition-colors duration-300">
-                        Privacidad
-                    </a>
-                    <a href="#" class="hover:text-primary transition-colors duration-300">
-                        Términos
-                    </a>
-                    <a href="#" class="hover:text-primary transition-colors duration-300">
-                        Sitemap
-                    </a>
-                </div>
-
-            </div>
+    <section class="section about" id="nosotros">
+      <div class="container grid grid-two">
+        <div>
+          <span class="accent">IPE3® ENGINEERING</span>
+          <h2 class="section-title">Ingeniería para conectar tus ideas</h2>
+          <p class="muted">
+            Somos IPE3® Engineering, by Corporación 360,
+            con base en Quito, Ecuador. Integramos servicios de
+            ingeniería eléctrica, automatización, seguridad electrónica
+            y mantenimiento.
+          </p>
+          <a class="button" href="#contacto">Hablar con nosotros</a>
         </div>
 
-    </div> <!-- FIN CONTAINER -->
-</footer>
-<!-- JS Propio -->
-<script src="./script.js" defer></script>
+        <div class="card">
+          <h3>Cómo planteamos tu proyecto</h3>
+          <ol class="muted">
+            <li>Recibimos tu requerimiento.</li>
+            <li>Definimos si hace falta una visita técnica.</li>
+            <li>Preparamos alcance, materiales y presupuesto.</li>
+            <li>Acordamos instalación, pruebas y entrega.</li>
+          </ol>
+          <p>
+            Los plazos, garantías y condiciones se detallan
+            en cada cotización.
+          </p>
+        </div>
+      </div>
+    </section>
 
+    <section class="section" id="contacto">
+      <div class="container">
+        <h2 class="section-title">Conversemos sobre tu proyecto</h2>
+        <p class="intro">
+          Solicita una cotización o consulta la disponibilidad
+          de una visita técnica.
+        </p>
+
+        <div class="contact-grid">
+          <div class="contact-details">
+            <h3>Contacto directo</h3>
+            <p>
+              <strong>Teléfono</strong><br>
+              <a href="tel:+593984016027">+593 98 401 6027</a>
+            </p>
+            <p>
+              <strong>Correo</strong><br>
+              <a href="mailto:ipe3ecuador@gmail.com">ipe3ecuador@gmail.com</a>
+            </p>
+            <p><strong>Dirección</strong></p>
+            <address>Cusubamba y Tendales, Quito, Ecuador</address>
+            <p>
+              <a
+                href="https://www.google.com/maps/search/?api=1&query=Cusubamba%20y%20Tendales%2C%20Quito%2C%20Ecuador"
+                target="_blank"
+                rel="noopener noreferrer"
+              >Buscar dirección en Google Maps ↗</a>
+            </p>
+            <a
+              class="button button-outline"
+              href="https://wa.me/593984016027"
+              target="_blank"
+              rel="noopener noreferrer"
+            >Abrir WhatsApp</a>
+          </div>
+
+          <form class="form" id="cotizacion">
+            <h3>Solicitar cotización</h3>
+            <p class="form-note">
+              Completa los datos. Prepararemos un mensaje que
+              tú podrás revisar y enviar por WhatsApp.
+            </p>
+
+            <div class="form-row">
+              <label for="nombre">
+                Nombre *
+                <input id="nombre" name="nombre" autocomplete="name" maxlength="100" required>
+              </label>
+
+              <label for="telefono">
+                Teléfono *
+                <input
+                  id="telefono"
+                  name="telefono"
+                  type="tel"
+                  autocomplete="tel"
+                  maxlength="25"
+                  required
+                >
+              </label>
+            </div>
+
+            <div class="form-row">
+              <label for="ciudad">
+                Ciudad *
+                <input id="ciudad" name="ciudad" autocomplete="address-level2" maxlength="100" required>
+              </label>
+
+              <label for="servicio">
+                Servicio *
+                <select id="servicio" name="servicio" required>
+                  <option value="">Selecciona una opción</option>
+                  <option>Proyectos eléctricos</option>
+                  <option>Domótica y automatización</option>
+                  <option>Seguridad electrónica</option>
+                  <option>Mantenimiento médico</option>
+                  <option>Otro servicio</option>
+                </select>
+              </label>
+            </div>
+
+            <label for="solicitud">
+              Tipo de solicitud
+              <select id="solicitud" name="solicitud">
+                <option>Cotización</option>
+                <option>Visita técnica</option>
+                <option>Consulta de mantenimiento</option>
+              </select>
+            </label>
+
+            <label for="detalle">
+              Describe tu necesidad *
+              <textarea
+                id="detalle"
+                name="detalle"
+                minlength="10"
+                maxlength="1500"
+                placeholder="Indica qué necesitas, ubicación del trabajo y detalles relevantes."
+                required
+              ></textarea>
+            </label>
+
+            <label class="consent" for="consentimiento">
+              <input id="consentimiento" name="consentimiento" type="checkbox" required>
+              <span>
+                Acepto compartir estos datos por WhatsApp
+                para recibir respuesta sobre mi solicitud.
+              </span>
+            </label>
+
+            <button class="button" type="submit">Preparar solicitud en WhatsApp</button>
+
+            <p class="form-note">
+              Esta página no guarda los datos del formulario.
+              El envío se realiza cuando lo confirmas en WhatsApp.
+              No incluyas contraseñas ni información sensible.
+            </p>
+
+            <div id="resultado" hidden>
+              <p class="status" role="status">
+                Mensaje preparado. Todavía no se ha enviado.
+              </p>
+              <a
+                id="enlace-whatsapp"
+                class="button button-outline"
+                target="_blank"
+                rel="noopener noreferrer"
+              >Abrir WhatsApp y revisar mensaje ↗</a>
+            </div>
+
+            <noscript>
+              <p>
+                Para preparar el mensaje necesitas JavaScript.
+                También puedes llamarnos o escribir directamente
+                mediante el botón de WhatsApp.
+              </p>
+            </noscript>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <span>© <span id="year">2026</span> IPE3® Engineering · Corporación 360</span>
+        <nav class="footer-links" aria-label="Enlaces del pie">
+          <a href="#inicio">Inicio</a>
+          <a href="#servicios">Servicios</a>
+          <a href="#nosotros">Nosotros</a>
+          <a href="#contacto">Contacto</a>
+        </nav>
+      </div>
+
+      <p class="privacy">
+        Los nombres de marcas pertenecen a sus respectivos titulares.
+        Su mención no implica una certificación o distribución autorizada.
+        Los enlaces a WhatsApp y Google Maps abren servicios externos.
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    const menuButton = document.getElementById("menu-toggle");
+    const menu = document.getElementById("menu");
+    const mobileViewport = window.matchMedia("(max-width: 850px)");
+
+    menuButton.hidden = false;
+
+    function closeMenu() {
+      menu.classList.remove("is-open");
+      menuButton.setAttribute("aria-expanded", "false");
+      menuButton.setAttribute("aria-label", "Abrir menú");
+      menuButton.textContent = "☰";
+    }
+
+    menuButton.addEventListener("click", () => {
+      const expanded = menuButton.getAttribute("aria-expanded") === "true";
+      menu.classList.toggle("is-open", !expanded);
+      menuButton.setAttribute("aria-expanded", String(!expanded));
+      menuButton.setAttribute("aria-label", expanded ? "Abrir menú" : "Cerrar menú");
+      menuButton.textContent = expanded ? "☰" : "✕";
+    });
+
+    menu.querySelectorAll("a").forEach(link => {
+      link.addEventListener("click", closeMenu);
+    });
+
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && menu.classList.contains("is-open")) {
+        closeMenu();
+        menuButton.focus();
+      }
+    });
+
+    document.addEventListener("click", event => {
+      if (!event.target.closest(".navigation")) {
+        closeMenu();
+      }
+    });
+
+    mobileViewport.addEventListener("change", () => {
+      if (!mobileViewport.matches) {
+        closeMenu();
+      }
+    });
+
+    const quotationForm = document.getElementById("cotizacion");
+    const result = document.getElementById("resultado");
+    const whatsappLink = document.getElementById("enlace-whatsapp");
+
+    quotationForm.addEventListener("input", () => {
+      result.hidden = true;
+      whatsappLink.removeAttribute("href");
+    });
+
+    quotationForm.addEventListener("submit", event => {
+      event.preventDefault();
+
+      if (!quotationForm.reportValidity()) {
+        return;
+      }
+
+      const formData = new FormData(quotationForm);
+      const field = name => String(formData.get(name) || "").trim();
+
+      const message = [
+        "Hola, IPE3 Engineering.",
+        "",
+        "Quiero solicitar: " + field("solicitud"),
+        "Nombre: " + field("nombre"),
+        "Teléfono: " + field("telefono"),
+        "Ciudad: " + field("ciudad"),
+        "Servicio: " + field("servicio"),
+        "",
+        "Detalle:",
+        field("detalle")
+      ].join("\n");
+
+      whatsappLink.href =
+        "https://wa.me/593984016027?text=" + encodeURIComponent(message);
+
+      result.hidden = false;
+      whatsappLink.focus();
+    });
+
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
