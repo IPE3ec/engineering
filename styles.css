@@ -1,0 +1,70 @@
+/* Fuentes */
+body { font-family: 'Space Grotesk', sans-serif; }
+
+/* Fondos y patrones */
+.dark-gradient-bg {
+    background: radial-gradient(circle at top right, #1a2333, #0a0c10 70%);
+}
+.circuit-pattern {
+    background-image: radial-gradient(var(--tw-colors-primary) 0.5px, transparent 0.5px);
+    background-size: 32px 32px;
+    opacity: 0.08;
+}
+.constellation-bg {
+    background: radial-gradient(circle at 50% 50%, #111827, #030712);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Estrellas y líneas de constelación */
+.star {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    opacity: 0.5;
+}
+.constellation-line {
+    position: absolute;
+    background: rgba(0, 210, 255, 0.1);
+    height: 1px;
+    transform-origin: left center;
+}
+
+/* Paneles de vidrio */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Marquee (logos) */
+.marquee-container {
+    mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+@keyframes kenburns-lr {
+  0% { transform: scale(1.05) translateX(0); }
+  50% { transform: scale(1.1) translateX(20px); }
+  100% { transform: scale(1.05) translateX(0); }
+}
+
+.animate-ken-burns-lr {
+  animation: kenburns-lr 20s ease-in-out infinite alternate;
+}
+/* ANIMACIÓN FADE + SLIDE */
+@keyframes fadeSlide {
+  0% { opacity: 0; transform: translateY(2rem); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-slide {
+  animation: fadeSlide 1s ease-out forwards;
+}
+
+.animate-fade-slide-delay {
+  animation: fadeSlide 1s ease-out 0.5s forwards;
+}
+
+.animate-fade-slide-delay-2 {
+  animation: fadeSlide 1s ease-out 0.8s forwards;
+}
+
