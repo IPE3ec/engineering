@@ -1,6 +1,6 @@
 # IPE3 Engineering by CORPORACIÓN 360 🇪🇨
 
-Sede principal: Quito, Ecuador. Especialistas en Ingeniería Eléctrica, Electrónica y Automatización Industrial.
+Páguina Web Oficial, Sede principal: Quito, Ecuador. Especialistas en Ingeniería Eléctrica, Electrónica y Automatización Industrial.
 
 ## 🚀 Tecnologías Utilizadas
 * **Frontend:** HTML5, Tailwind CSS.
