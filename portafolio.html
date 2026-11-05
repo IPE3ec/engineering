@@ -1,0 +1,861 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>IPE3 CCTV | Portafolio</title>
+  <style>
+    :root{
+      --bg:#07111d;
+      --bg-2:#0d1b30;
+      --card:#111e31cc;
+      --line:#263852;
+      --txt:#e7eef8;
+      --muted:#9fb0c5;
+      --accent:#36d399;
+      --accent-2:#183b78;
+      --accent-3:#24add7;
+      --danger:#ff8181;
+      --warning:#ffc96e;
+      --white:#fff;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      background:linear-gradient(160deg,var(--bg),var(--bg-2));
+      color:var(--txt);
+      font:15px system-ui, sans-serif;
+      padding-bottom:80px;
+    }
+
+    h1,h2,h3,p{margin:0}
+    header{
+      position:sticky;
+      top:0;
+      z-index:10;
+      background:rgba(11,22,39,.9);
+      backdrop-filter:blur(14px);
+      border-bottom:1px solid var(--line);
+      padding:14px 16px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+
+    .brand{
+      display:flex;align-items:center;gap:12px;
+      min-width:0;
+    }
+
+    .brand-mark{
+      width:42px;height:42px;border-radius:10px;
+      background:linear-gradient(135deg,#183b78,#24add7);
+      display:grid;place-items:center;
+      font-weight:900;color:#fff;
+      letter-spacing:.08em;
+      box-shadow:0 0 18px rgba(36,173,215,.35);
+    }
+
+    h1{
+      font-size:18px;
+      font-weight:700;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    main{
+      max-width:760px;
+      margin:0 auto;
+      padding:16px;
+    }
+
+    .tabs{
+      display:flex;gap:8px;overflow:auto;
+      margin-bottom:16px;padding-bottom:4px;
+    }
+
+    .tabs button, .btn{
+      border:0;border-radius:10px;
+      padding:11px 14px;
+      background:var(--card);
+      color:var(--txt);
+      font-weight:700;
+      cursor:pointer;
+      transition:.2s ease;
+    }
+
+    .tabs button.active, .primary{
+      background:var(--accent);
+      color:#052216;
+    }
+
+    .tabs button:hover, .btn:hover{filter:brightness(1.05)}
+    .btn.danger{background:#3a1c1d;color:#ffd5d5}
+    .btn.secondary{background:#223957;color:var(--txt)}
+
+    .view{display:none}
+    .view.active{display:block}
+
+    .card{
+      background:rgba(17,30,49,.8);
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:15px;
+      margin-bottom:12px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(145px,1fr));
+      gap:12px;
+    }
+
+    .product{
+      position:relative;
+    }
+
+    .product.selected-product{
+      outline:2px solid rgba(54,211,153,.6);
+      box-shadow:0 0 0 3px rgba(54,211,153,.14);
+    }
+
+    .select-product{
+      display:flex;align-items:center;gap:8px;
+      font-size:12px;color:var(--muted);
+      margin-bottom:8px;
+    }
+
+    .select-product input{
+      width:auto;
+      accent-color:var(--accent);
+      margin:0;
+    }
+
+    .product img{
+      width:100%;height:220px;object-fit:contain;
+      border-radius:10px;background:#08111f;
+      display:block;
+      margin-bottom:10px;
+      border:1px solid rgba(255,255,255,.05);
+    }
+
+    .muted{color:var(--muted);font-size:12px}
+    .product h3{
+      font-size:14px;
+      margin:8px 0 4px;
+      line-height:1.35;
+    }
+
+    .desc{
+      min-height:58px;
+      line-height:1.45;
+      color:var(--muted);
+      font-size:12px;
+    }
+
+    .price{
+      margin-top:10px;
+      color:var(--accent);
+      font-weight:800;
+      font-size:19px;
+    }
+
+    .row{
+      display:flex;justify-content:space-between;align-items:center;gap:8px;
+      margin-top:10px;
+    }
+
+    .row.tight{margin-top:6px}
+    .notice{
+      color:var(--warning);
+      font-size:12px;
+      margin-top:8px;
+    }
+
+    .empty{
+      text-align:center;
+      padding:28px;
+      color:var(--muted);
+    }
+
+    .tool-row{
+      display:flex;gap:8px;flex-wrap:wrap;
+      align-items:center;justify-content:space-between;
+    }
+
+    .filters{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+      gap:10px;
+    }
+
+    label{
+      display:block;
+      font-size:12px;
+      color:var(--muted);
+      margin-bottom:6px;
+    }
+
+    input,select,textarea{
+      width:100%;
+      padding:11px;
+      border:1px solid var(--line);
+      border-radius:9px;
+      background:#091526;
+      color:var(--txt);
+      margin:5px 0 10px;
+      font:inherit;
+    }
+
+    textarea{min-height:90px;resize:vertical}
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      font-size:13px;
+    }
+
+    th,td{
+      padding:8px;
+      border-bottom:1px solid var(--line);
+      text-align:left;
+      vertical-align:top;
+    }
+
+    .image-open{
+      width:100%;border:0;background:transparent;padding:0;cursor:pointer;
+    }
+
+    dialog{
+      max-width:620px;width:95%;max-height:90vh;overflow:auto;
+      background:#111e31;color:#e7eef8;border:1px solid #263852;border-radius:16px;padding:20px;
+    }
+    dialog::backdrop{background:rgba(0,0,0,.7)}
+
+    footer{
+      position:fixed;bottom:0;left:0;right:0;
+      background:rgba(11,22,39,.95);
+      border-top:1px solid var(--line);
+      padding:12px;text-align:center;
+      font-size:11px;color:var(--muted);
+    }
+
+    @media (min-width:640px){
+      .grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="brand-mark">IPE3</div>
+      <h1>IPE3 CCTV | Portafolio</h1>
+    </div>
+  </header>
+
+  <main>
+    <div class="tabs">
+      <button class="active" type="button" data-tab="catalogo">Catálogo</button>
+      <button type="button" data-tab="proforma">Proforma</button>
+      <button type="button" data-tab="inventario">Inventario</button>
+    </div>
+
+    <section id="catalogo" class="view active">
+      <div class="card">
+        <div class="filters">
+          <div>
+            <label for="search">Buscar</label>
+            <input id="search" type="text" placeholder="Ej: Hikvision, 4MP, NVR">
+          </div>
+          <div>
+            <label for="catFilter">Categoría</label>
+            <select id="catFilter">
+              <option value="">Todas</option>
+            </select>
+          </div>
+          <div>
+            <label for="brandFilter">Marca</label>
+            <select id="brandFilter">
+              <option value="">Todas</option>
+            </select>
+          </div>
+          <div>
+            <label for="resolutionFilter">Resolución</label>
+            <select id="resolutionFilter">
+              <option value="">Todas</option>
+            </select>
+          </div>
+          <div>
+            <label for="typeFilter">Tipo</label>
+            <select id="typeFilter">
+              <option value="">Todos</option>
+              <option value="ip">IP</option>
+              <option value="analog">Analógico</option>
+              <option value="poe">PoE</option>
+              <option value="night">Visión Nocturna</option>
+              <option value="audio">Audio</option>
+              <option value="solar">Solar</option>
+              <option value="ptz">PTZ</option>
+            </select>
+          </div>
+          <div>
+            <label for="minPrice">Min</label>
+            <input id="minPrice" type="number" min="0" step="0.01" placeholder="0">
+          </div>
+          <div>
+            <label for="maxPrice">Max</label>
+            <input id="maxPrice" type="number" min="0" step="0.01" placeholder="10000">
+          </div>
+        </div>
+
+        <div class="row tight">
+          <button id="clearFilters" class="btn secondary" type="button">Limpiar filtros</button>
+          <button id="addSelected" class="btn primary" type="button">Añadir seleccionados</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="tool-row">
+          <p id="catalogStatus" class="muted">Cargando catálogo…</p>
+          <button id="sheetSelected" class="btn secondary" type="button">Ficha técnica</button>
+        </div>
+      </div>
+
+      <div id="products" class="grid"></div>
+
+      <div class="card" style="text-align:center;">
+        <button id="moreProducts" class="btn secondary" type="button">Cargar más</button>
+      </div>
+    </section>
+
+    <section id="proforma" class="view">
+      <div class="card">
+        <h2>Proforma</h2>
+        <div id="quoteItems"></div>
+        <div class="row">
+          <button id="exportQuote" class="btn primary" type="button">Exportar proforma</button>
+          <button id="clearQuote" class="btn danger" type="button">Vaciar</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="inventario" class="view">
+      <div id="inventory"></div>
+    </section>
+  </main>
+
+  <dialog id="productDialog">
+    <div id="dialogContent"></div>
+    <div class="row" style="margin-top:16px;">
+      <button class="btn secondary" type="button" onclick="closeDialog()">Cerrar</button>
+      <button class="btn primary" type="button" id="dialogAdd">Añadir a proforma</button>
+    </div>
+  </dialog>
+
+  <footer>IPE3 Engineering • Portafolio CCTV • Precios con incremento del 20%</footer>
+
+  <script>
+    const PRICE_INCREASE = 20;
+    const PRODUCTS = [
+      {
+        id: "ipe3-001",
+        name: "Kit Hikvision 2 cámaras domo 720p",
+        category: "Kits",
+        brand: "Hikvision",
+        resolution: "720p",
+        description: "Incluye 1 DVR Hikvision de 4 canales, 2 cámaras domo 720p, 2 pares de video balun y 2 fuentes.",
+        cost: 62.8,
+        stock: "Disponible",
+        img: "https://images.unsplash.com/photo-1555617117-08d1d7f0d6f7?auto=format&fit=crop&w=900&q=80",
+        features: ["DVR 4 canales", "2 cámaras", "720p", "PoE opcional"]
+      },
+      {
+        id: "ipe3-002",
+        name: "Cámara IP 4MP Bullet Hikvision",
+        category: "Cámaras",
+        brand: "Hikvision",
+        resolution: "4MP",
+        description: "Cámara IP exterior, visión nocturna, lente fijo, resistente a la intemperie.",
+        cost: 120.0,
+        stock: "Disponible",
+        img: "https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=900&q=80",
+        features: ["4MP", "Vision nocturna", "IP66", "IR 30m"]
+      },
+      {
+        id: "ipe3-003",
+        name: "NVR 8 canales 4K Hikvision",
+        category: "Grabadores",
+        brand: "Hikvision",
+        resolution: "4K",
+        description: "NVR para 8 canales con soporte de video 4K y almacenamiento flexible.",
+        cost: 430.0,
+        stock: "Disponible",
+        img: "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?auto=format&fit=crop&w=900&q=80",
+        features: ["8 canales", "4K", "PoE", "HDMI 4K"]
+      },
+      {
+        id: "ipe3-004",
+        name: "Cámara PTZ 5MP Dahua",
+        category: "Cámaras",
+        brand: "Dahua",
+        resolution: "5MP",
+        description: "Cámara motorizada con zoom óptico, ideal para vigilancia de entrada y perímetro.",
+        cost: 515.0,
+        stock: "En stock",
+        img: "https://images.unsplash.com/photo-1526379095070-4cd7d7f8f406?auto=format&fit=crop&w=900&q=80",
+        features: ["PTZ", "5MP", "Zoom", "Visión nocturna"]
+      },
+      {
+        id: "ipe3-005",
+        name: "DVR 8 canales 1080p",
+        category: "Grabadores",
+        brand: "Eken",
+        resolution: "1080p",
+        description: "DVR analógico con 8 canales, amplio soporte para cámaras CCTV analógicas.",
+        cost: 210.0,
+        stock: "Disponible",
+        img: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=900&q=80",
+        features: ["8 canales", "1080p", "DVR", "Analógico"]
+      },
+      {
+        id: "ipe3-006",
+        name: "Kit solar para CCTV",
+        category: "Kits",
+        brand: "IP3",
+        resolution: "4MP",
+        description: "Sistema solar para cámaras remotas con batería y panel fotovoltaico.",
+        cost: 760.0,
+        stock: "Pedido",
+        img: "https://images.unsplash.com/photo-1497440001374-f26997328c1b?auto=format&fit=crop&w=900&q=80",
+        features: ["Energía solar", "Cámara remota", "Batería", "PoE"]
+      },
+      {
+        id: "ipe3-007",
+        name: "Microfono IP para cámaras",
+        category: "Accesorios",
+        brand: "Hikvision",
+        resolution: "IP",
+        description: "Micrófono activo para audio integrado en cámaras IP o para estaciones de monitoreo.",
+        cost: 68.5,
+        stock: "Disponible",
+        img: "https://images.unsplash.com/photo-1583394838336-acd977736f90?auto=format&fit=crop&w=900&q=80",
+        features: ["Audio", "IP", "Micrófono", "Ángulo amplio"]
+      },
+      {
+        id: "ipe3-008",
+        name: "Switch PoE 8 puertos 100Mbps",
+        category: "Redes",
+        brand: "TP-Link",
+        resolution: "PoE",
+        description: "Switch de red con 8 puertos PoE para soportar cámaras IP y equipamiento CCTV.",
+        cost: 180.0,
+        stock: "Disponible",
+        img: "https://images.unsplash.com/photo-1518770660439-463ac1b9fdd7?auto=format&fit=crop&w=900&q=80",
+        features: ["PoE", "8 puertos", "100Mbps", "Rack"]
+      },
+      {
+        id: "ipe3-009",
+        name: "Cámara IP 5MP Turret",
+        category: "Cámaras",
+        brand: "Dahua",
+        resolution: "5MP",
+        description: "Cámara tipo turret para exteriores, alta nitidez y fácil instalación.",
+        cost: 150.0,
+        stock: "Disponible",
+        img: "https://images.unsplash.com/photo-1555617117-08d1d7f0d6f7?auto=format&fit=crop&w=900&q=80",
+        features: ["5MP", "Turret", "Exterior", "IR 30m"]
+      },
+      {
+        id: "ipe3-010",
+        name: "DVR 16 canales 4K",
+        category: "Grabadores",
+        brand: "Hikvision",
+        resolution: "4K",
+        description: "Grabador de 16 canales para videovigilancia profesional con alta resolución.",
+        cost: 660.0,
+        stock: "En stock",
+        img: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80",
+        features: ["16 canales", "4K", "32TB", "Eficiente"]
+      }
+    ];
+
+    const state = {
+      selected: new Set(),
+      cart: [],
+      shown: 6,
+      activeTab: "catalogo"
+    };
+
+    const catalogStatus = document.getElementById("catalogStatus");
+    const productsEl = document.getElementById("products");
+    const quoteItems = document.getElementById("quoteItems");
+    const inventory = document.getElementById("inventory");
+    const dialog = document.getElementById("productDialog");
+    const dialogContent = document.getElementById("dialogContent");
+    const dialogAdd = document.getElementById("dialogAdd");
+
+    function money(n){
+      return "$" + Number(n || 0).toFixed(2);
+    }
+
+    function priceOf(product){
+      const base = Number(product && product.cost !== undefined ? product.cost : 0);
+      return Number((base * (100 + PRICE_INCREASE) / 100).toFixed(2));
+    }
+
+    function esc(value){
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function getUniqueValues(key){
+      return [...new Set(PRODUCTS.map(p => p[key]).filter(Boolean))].sort();
+    }
+
+    function renderFilters(){
+      const categories = getUniqueValues("category");
+      const brands = getUniqueValues("brand");
+      const resolutions = getUniqueValues("resolution");
+
+      const catFilter = document.getElementById("catFilter");
+      const brandFilter = document.getElementById("brandFilter");
+      const resolutionFilter = document.getElementById("resolutionFilter");
+
+      catFilter.innerHTML = '<option value="">Todas</option>' + categories.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join("");
+      brandFilter.innerHTML = '<option value="">Todas</option>' + brands.map(b => `<option value="${esc(b)}">${esc(b)}</option>`).join("");
+      resolutionFilter.innerHTML = '<option value="">Todas</option>' + resolutions.map(r => `<option value="${esc(r)}">${esc(r)}</option>`).join("");
+    }
+
+    function getFilteredProducts(){
+      const q = document.getElementById("search").value.trim().toLowerCase();
+      const category = document.getElementById("catFilter").value;
+      const brand = document.getElementById("brandFilter").value;
+      const resolution = document.getElementById("resolutionFilter").value;
+      const min = Number(document.getElementById("minPrice").value || 0);
+      const max = Number(document.getElementById("maxPrice").value || Number.MAX_SAFE_INTEGER);
+
+      return PRODUCTS.filter(p => {
+        const text = `${p.name} ${p.description} ${p.category} ${p.brand} ${p.resolution} ${p.features.join(" ")}`.toLowerCase();
+        const price = priceOf(p);
+
+        return (
+          (!q || text.includes(q)) &&
+          (!category || p.category === category) &&
+          (!brand || p.brand === brand) &&
+          (!resolution || p.resolution === resolution) &&
+          price >= min &&
+          price <= max
+        );
+      });
+    }
+
+    function renderProducts(){
+      const filtered = getFilteredProducts().slice(0, state.shown);
+      catalogStatus.textContent = `${filtered.length} referencias · filtros aplicados`;
+
+      if (!filtered.length) {
+        productsEl.innerHTML = '<div class="empty">Sin coincidencias.</div>';
+        return;
+      }
+
+      productsEl.innerHTML = filtered.map(p => {
+        const selected = state.selected.has(p.id);
+        const sale = priceOf(p);
+        return `
+          <article class="card product ${selected ? "selected-product" : ""}">
+            <label class="select-product">
+              <input type="checkbox" ${selected ? "checked" : ""} data-id="${p.id}">
+              Seleccionar
+            </label>
+            <button class="image-open" type="button" onclick="openDialog('${p.id}')">
+              <img src="${p.img}" alt="${esc(p.name)}">
+            </button>
+            <div class="muted">${esc(p.category)} · ${esc(p.brand)}</div>
+            <h3>${esc(p.name)}</h3>
+            <p class="muted desc">${esc(p.description)}</p>
+            <div class="muted">Stock: ${esc(p.stock)}</div>
+            <div class="price">${money(sale)}</div>
+            <small class="muted">Precio de venta + IVA</small>
+            <div class="row">
+              <button class="btn secondary" type="button" onclick="openDialog('${p.id}')">Ficha</button>
+              <button class="btn primary" type="button" onclick="addToQuote('${p.id}')">Añadir</button>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function renderQuote(){
+      if (!state.cart.length) {
+        quoteItems.innerHTML = '<div class="empty">No hay productos en la proforma.</div>';
+        return;
+      }
+
+      const items = state.cart.map(item => {
+        const product = PRODUCTS.find(p => p.id === item.id);
+        if (!product) return "";
+        return `
+          <div class="card">
+            <div class="row">
+              <strong>${esc(product.name)}</strong>
+              <span>${money(priceOf(product))}</span>
+            </div>
+            <div class="row">
+              <small class="muted">${esc(product.category)} · ${esc(product.brand)}</small>
+              <button class="btn danger" type="button" onclick="removeFromQuote('${product.id}')">Quitar</button>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      const total = state.cart.reduce((acc, id) => {
+        const product = PRODUCTS.find(p => p.id === id);
+        return acc + (product ? priceOf(product) : 0);
+      }, 0);
+
+      quoteItems.innerHTML = `
+        ${items}
+        <div class="card">
+          <div class="row">
+            <strong>Total estimado</strong>
+            <strong>${money(total)}</strong>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderInventory(){
+      if (!PRODUCTS.length) {
+        inventory.innerHTML = '<div class="empty">Sin equipos.</div>';
+        return;
+      }
+
+      inventory.innerHTML = `
+        <div style="overflow:auto">
+          <table>
+            <tr>
+              <th>Equipo</th>
+              <th>Costo</th>
+              <th>Venta + IVA</th>
+              <th>Stock</th>
+              <th></th>
+            </tr>
+            ${PRODUCTS.map(p => `
+              <tr>
+                <td>${esc(p.name)}</td>
+                <td>${money(p.cost)}</td>
+                <td>${money(priceOf(p))}</td>
+                <td>${esc(p.stock)}</td>
+                <td><button class="btn secondary" type="button" onclick="openDialog('${p.id}')">Ver</button></td>
+              </tr>
+            `).join("")}
+          </table>
+        </div>
+      `;
+    }
+
+    function openDialog(id){
+      const product = PRODUCTS.find(p => p.id === id);
+      if (!product) return;
+
+      dialogContent.innerHTML = `
+        <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start;">
+          <img src="${product.img}" alt="${esc(product.name)}" style="width:220px;max-width:100%;height:180px;object-fit:contain;border-radius:12px;background:#08111f;border:1px solid rgba(255,255,255,.05);">
+          <div style="flex:1;min-width:220px;">
+            <div class="muted">${esc(product.category)} · ${esc(product.brand)}</div>
+            <h2 style="margin:8px 0;">${esc(product.name)}</h2>
+            <div class="price">${money(priceOf(product))}</div>
+            <small class="muted">Precio de venta + IVA</small>
+            <p style="margin-top:10px;color:var(--muted);line-height:1.5;">${esc(product.description)}</p>
+            <div class="muted" style="margin-top:10px;">Stock: ${esc(product.stock)}</div>
+          </div>
+        </div>
+        <div style="margin-top:16px;">
+          <h3>Características</h3>
+          <ul>
+            ${product.features.map(f => `<li>${esc(f)}</li>`).join("")}
+          </ul>
+        </div>
+      `;
+
+      dialogAdd.onclick = () => {
+        addToQuote(product.id);
+        closeDialog();
+      };
+
+      dialog.showModal();
+    }
+
+    function closeDialog(){
+      dialog.close();
+    }
+
+    function addToQuote(id){
+      if (!state.cart.includes(id)) state.cart.push(id);
+      renderQuote();
+      renderProducts();
+    }
+
+    function removeFromQuote(id){
+      state.cart = state.cart.filter(item => item !== id);
+      renderQuote();
+    }
+
+    function toggleSelectedFromCheckboxes(){
+      const boxes = [...document.querySelectorAll("input[type='checkbox'][data-id]")];
+      state.selected = new Set(boxes.filter(b => b.checked).map(b => b.dataset.id));
+    }
+
+    function addSelectedToQuote(){
+      const checked = [...document.querySelectorAll("input[type='checkbox'][data-id]")].filter(el => el.checked).map(el => el.dataset.id);
+      checked.forEach(id => {
+        if (!state.cart.includes(id)) state.cart.push(id);
+      });
+      state.selected = new Set(checked);
+      renderQuote();
+      renderProducts();
+    }
+
+    document.querySelectorAll(".tabs button").forEach(button => {
+      button.addEventListener("click", () => {
+        document.querySelectorAll(".tabs button").forEach(btn => btn.classList.remove("active"));
+        button.classList.add("active");
+        const tab = button.dataset.tab;
+        document.querySelectorAll(".view").forEach(el => el.classList.remove("active"));
+        document.getElementById(tab).classList.add("active");
+      });
+    });
+
+    document.getElementById("clearFilters").addEventListener("click", () => {
+      document.getElementById("search").value = "";
+      document.getElementById("catFilter").value = "";
+      document.getElementById("brandFilter").value = "";
+      document.getElementById("resolutionFilter").value = "";
+      document.getElementById("minPrice").value = "";
+      document.getElementById("maxPrice").value = "";
+      state.shown = 6;
+      renderProducts();
+    });
+
+    document.getElementById("addSelected").addEventListener("click", addSelectedToQuote);
+    document.getElementById("sheetSelected").addEventListener("click", () => {
+      const checked = [...document.querySelectorAll("input[type='checkbox'][data-id]")].filter(el => el.checked).map(el => el.dataset.id);
+      if (!checked.length) {
+        alert("Selecciona al menos un producto.");
+        return;
+      }
+      const selectedProducts = PRODUCTS.filter(p => checked.includes(p.id));
+      const html = `
+        <html>
+        <head>
+          <title>Ficha técnica IPE3</title>
+          <style>
+            body { font: 14px Arial, sans-serif; color: #183b78; padding: 24px; }
+            h1 { border-bottom:3px solid #24add7; padding-bottom:10px; }
+            .item { border:1px solid #ccdfed; border-radius:8px; padding:14px; margin:12px 0; page-break-inside:avoid; }
+            .item img { width:180px; height:130px; object-fit:contain; float:right; }
+            .muted { color: #4d647e; }
+          </style>
+        </head>
+        <body onload="window.print()">
+          <h1>IPE3 Engineering · Ficha técnica CCTV</h1>
+          ${selectedProducts.map(p => `
+            <div class="item">
+              <img src="${p.img}">
+              <h2>${esc(p.name)}</h2>
+              <p>
+                <b>Marca:</b> ${esc(p.brand)}<br>
+                <b>Categoría:</b> ${esc(p.category)}<br>
+                <b>Precio distribuidor:</b> ${money(p.cost)}<br>
+                <b>Precio venta +20%:</b> ${money(priceOf(p))}
+              </p>
+              <p class="muted">${esc(p.description)}</p>
+              <div style="clear:both"></div>
+            </div>
+          `).join("")}
+        </body>
+      </html>
+      `;
+
+      const w = window.open("", "_blank");
+      if (w) {
+        w.document.write(html);
+        w.document.close();
+      }
+    });
+
+    document.getElementById("exportQuote").addEventListener("click", () => {
+      const total = state.cart.reduce((sum, id) => {
+        const product = PRODUCTS.find(p => p.id === id);
+        return sum + (product ? priceOf(product) : 0);
+      }, 0);
+
+      const lines = state.cart.map(id => {
+        const product = PRODUCTS.find(p => p.id === id);
+        return `${product.name} - ${money(priceOf(product))}`;
+      });
+
+      const text = [
+        "IPE3 Engineering",
+        "Proforma CCTV",
+        "",
+        ...lines,
+        "",
+        `Total: ${money(total)}`
+      ].join("\n");
+
+      const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "proforma-ipe3.txt";
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    document.getElementById("clearQuote").addEventListener("click", () => {
+      state.cart = [];
+      renderQuote();
+    });
+
+    document.getElementById("moreProducts").addEventListener("click", () => {
+      state.shown += 6;
+      renderProducts();
+    });
+
+    document.getElementById("search").addEventListener("input", () => {
+      state.shown = 6;
+      renderProducts();
+    });
+
+    ["catFilter", "brandFilter", "resolutionFilter", "minPrice", "maxPrice"].forEach(id => {
+      document.getElementById(id).addEventListener("input", () => {
+        state.shown = 6;
+        renderProducts();
+      });
+      document.getElementById(id).addEventListener("change", () => {
+        state.shown = 6;
+        renderProducts();
+      });
+    });
+
+    productsEl.addEventListener("change", e => {
+      if (e.target.matches("input[type='checkbox'][data-id]")) {
+        toggleSelectedFromCheckboxes();
+      }
+    });
+
+    renderFilters();
+    renderProducts();
+    renderQuote();
+    renderInventory();
+  </script>
+</body>
+</html>
