@@ -136,10 +136,12 @@
 
     .product img{
       width:100%;height:220px;object-fit:contain;
-      border-radius:10px;background:#08111f;
+      object-position:center;
+      border-radius:10px;background:#f4f8ff;
       display:block;
       margin-bottom:10px;
-      border:1px solid rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.03);
     }
 
     .muted{color:var(--muted);font-size:12px}
@@ -208,6 +210,12 @@
       color:var(--txt);
       margin:5px 0 10px;
       font:inherit;
+    }
+
+    select:disabled, input:disabled{
+      opacity:.55;
+      cursor:not-allowed;
+      background:#0e1a2c;
     }
 
     textarea{min-height:90px;resize:vertical}
@@ -357,135 +365,243 @@
 
   <footer>IPE3 Engineering • Portafolio CCTV • Precios con incremento del 20%</footer>
 
+  <script src="./static/products/realCatalog.js"></script>
   <script>
     const PRICE_INCREASE = 20;
-    const PRODUCTS = [
-      {
-        id: "ipe3-001",
-        name: "Kit Hikvision 2 cámaras domo 720p",
-        category: "Kits",
-        brand: "Hikvision",
-        resolution: "720p",
-        description: "Incluye 1 DVR Hikvision de 4 canales, 2 cámaras domo 720p, 2 pares de video balun y 2 fuentes.",
-        cost: 62.8,
-        stock: "Disponible",
-        img: "https://images.unsplash.com/photo-1555617117-08d1d7f0d6f7?auto=format&fit=crop&w=900&q=80",
-        features: ["DVR 4 canales", "2 cámaras", "720p", "PoE opcional"]
-      },
-      {
-        id: "ipe3-002",
-        name: "Cámara IP 4MP Bullet Hikvision",
-        category: "Cámaras",
-        brand: "Hikvision",
-        resolution: "4MP",
-        description: "Cámara IP exterior, visión nocturna, lente fijo, resistente a la intemperie.",
-        cost: 120.0,
-        stock: "Disponible",
-        img: "https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=900&q=80",
-        features: ["4MP", "Vision nocturna", "IP66", "IR 30m"]
-      },
-      {
-        id: "ipe3-003",
-        name: "NVR 8 canales 4K Hikvision",
-        category: "Grabadores",
-        brand: "Hikvision",
-        resolution: "4K",
-        description: "NVR para 8 canales con soporte de video 4K y almacenamiento flexible.",
-        cost: 430.0,
-        stock: "Disponible",
-        img: "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?auto=format&fit=crop&w=900&q=80",
-        features: ["8 canales", "4K", "PoE", "HDMI 4K"]
-      },
-      {
-        id: "ipe3-004",
-        name: "Cámara PTZ 5MP Dahua",
-        category: "Cámaras",
-        brand: "Dahua",
-        resolution: "5MP",
-        description: "Cámara motorizada con zoom óptico, ideal para vigilancia de entrada y perímetro.",
-        cost: 515.0,
-        stock: "En stock",
-        img: "https://images.unsplash.com/photo-1526379095070-4cd7d7f8f406?auto=format&fit=crop&w=900&q=80",
-        features: ["PTZ", "5MP", "Zoom", "Visión nocturna"]
-      },
-      {
-        id: "ipe3-005",
-        name: "DVR 8 canales 1080p",
-        category: "Grabadores",
-        brand: "Eken",
-        resolution: "1080p",
-        description: "DVR analógico con 8 canales, amplio soporte para cámaras CCTV analógicas.",
-        cost: 210.0,
-        stock: "Disponible",
-        img: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=900&q=80",
-        features: ["8 canales", "1080p", "DVR", "Analógico"]
-      },
-      {
-        id: "ipe3-006",
-        name: "Kit solar para CCTV",
-        category: "Kits",
-        brand: "IP3",
-        resolution: "4MP",
-        description: "Sistema solar para cámaras remotas con batería y panel fotovoltaico.",
-        cost: 760.0,
-        stock: "Pedido",
-        img: "https://images.unsplash.com/photo-1497440001374-f26997328c1b?auto=format&fit=crop&w=900&q=80",
-        features: ["Energía solar", "Cámara remota", "Batería", "PoE"]
-      },
-      {
-        id: "ipe3-007",
-        name: "Microfono IP para cámaras",
-        category: "Accesorios",
-        brand: "Hikvision",
-        resolution: "IP",
-        description: "Micrófono activo para audio integrado en cámaras IP o para estaciones de monitoreo.",
-        cost: 68.5,
-        stock: "Disponible",
-        img: "https://images.unsplash.com/photo-1583394838336-acd977736f90?auto=format&fit=crop&w=900&q=80",
-        features: ["Audio", "IP", "Micrófono", "Ángulo amplio"]
-      },
-      {
-        id: "ipe3-008",
-        name: "Switch PoE 8 puertos 100Mbps",
-        category: "Redes",
-        brand: "TP-Link",
-        resolution: "PoE",
-        description: "Switch de red con 8 puertos PoE para soportar cámaras IP y equipamiento CCTV.",
-        cost: 180.0,
-        stock: "Disponible",
-        img: "https://images.unsplash.com/photo-1518770660439-463ac1b9fdd7?auto=format&fit=crop&w=900&q=80",
-        features: ["PoE", "8 puertos", "100Mbps", "Rack"]
-      },
-      {
-        id: "ipe3-009",
-        name: "Cámara IP 5MP Turret",
-        category: "Cámaras",
-        brand: "Dahua",
-        resolution: "5MP",
-        description: "Cámara tipo turret para exteriores, alta nitidez y fácil instalación.",
-        cost: 150.0,
-        stock: "Disponible",
-        img: "https://images.unsplash.com/photo-1555617117-08d1d7f0d6f7?auto=format&fit=crop&w=900&q=80",
-        features: ["5MP", "Turret", "Exterior", "IR 30m"]
-      },
-      {
-        id: "ipe3-010",
-        name: "DVR 16 canales 4K",
-        category: "Grabadores",
-        brand: "Hikvision",
-        resolution: "4K",
-        description: "Grabador de 16 canales para videovigilancia profesional con alta resolución.",
-        cost: 660.0,
-        stock: "En stock",
-        img: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80",
-        features: ["16 canales", "4K", "32TB", "Eficiente"]
-      }
+    const PRODUCT_IMAGE_POSITIONS = [
+      'center center', 'center 18%', 'center 28%', 'center 42%', 'center 55%', 'center 68%', 'center 78%', 'center 12%'
     ];
+
+    function productImagePosition(category, index) {
+      const base = String(category || '').length + index;
+      return PRODUCT_IMAGE_POSITIONS[base % PRODUCT_IMAGE_POSITIONS.length];
+    }
+
+    function makeProductArt(label, accent = '#36d399', secondary = '#24add7') {
+      const safe = String(label || 'IPE3').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      const svg = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="900" height="700" viewBox="0 0 900 700">
+          <defs>
+            <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+              <stop offset="0%" stop-color="#07111d"/>
+              <stop offset="100%" stop-color="#0d1b30"/>
+            </linearGradient>
+            <linearGradient id="panel" x1="0" x2="1" y1="0" y2="1">
+              <stop offset="0%" stop-color="${secondary}"/>
+              <stop offset="100%" stop-color="${accent}"/>
+            </linearGradient>
+          </defs>
+          <rect width="900" height="700" fill="url(#bg)"/>
+          <circle cx="700" cy="120" r="140" fill="${accent}" opacity="0.18"/>
+          <circle cx="170" cy="560" r="150" fill="${secondary}" opacity="0.18"/>
+          <rect x="120" y="130" width="660" height="430" rx="42" fill="rgba(9,21,38,0.8)" stroke="rgba(255,255,255,0.12)"/>
+          <rect x="220" y="190" width="460" height="250" rx="30" fill="url(#panel)" opacity="0.95"/>
+          <rect x="270" y="240" width="70" height="150" rx="18" fill="rgba(255,255,255,0.18)"/>
+          <rect x="380" y="240" width="70" height="150" rx="18" fill="rgba(255,255,255,0.12)"/>
+          <rect x="490" y="240" width="70" height="150" rx="18" fill="rgba(255,255,255,0.12)"/>
+          <circle cx="305" cy="180" r="26" fill="${accent}"/>
+          <circle cx="415" cy="180" r="26" fill="${secondary}"/>
+          <circle cx="525" cy="180" r="26" fill="${accent}"/>
+          <path d="M100 520h700" stroke="rgba(255,255,255,0.18)" stroke-width="8" stroke-linecap="round"/>
+          <text x="110" y="600" font-size="54" font-weight="700" fill="#e7eef8" font-family="Arial, Helvetica, sans-serif">${safe}</text>
+        </svg>
+      `;
+      return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+    }
+
+    const CATEGORY_SEEDS = [
+      { category: "ACCESO VEHICULAR", brand: "Dahua", label: "Barrera", variants: ["Vehicular", "IP", "Lector", "Control", "Módulo", "Kit"] },
+      { category: "ALARMAS COMUNITARIAS", brand: "Hikvision", label: "Alarma", variants: ["Central", "Módulo", "Panel", "Control", "Kit", "Sensor"] },
+      { category: "ALARMAS HOGAR", brand: "Hikvision", label: "Kit", variants: ["Hogar", "Smart", "Básico", "Plus", "Wifi", "IoT"] },
+      { category: "ANTENAS UBIQUITI Y ANTIHURTO", brand: "Ubiquiti", label: "Antena", variants: ["AirMAX", "Sector", "Exterior", "PtoP", "Nano", "Mini"] },
+      { category: "ASISTENCIA Y ACCESO", brand: "ZKTeco", label: "Acceso", variants: ["Biométrico", "Facial", "Control", "Módulo", "Kit", "Terminal"] },
+      { category: "BASTON RONDAS Y BODY CAM", brand: "Hikvision", label: "Bodycam", variants: ["Ronda", "Bastón", "Cam", "Pro", "Lite", "X"] },
+      { category: "BLACK FRIDAY", brand: "IPE3", label: "Oferta", variants: ["Flash", "Promo", "Kit", "Combo", "Plus", "Pack"] },
+      { category: "CABLES", brand: "Belden", label: "Cable", variants: ["Video", "PoE", "Coaxial", "Utp", "Power", "HDMI"] },
+      { category: "CAMARAS DE SEGURIDAD", brand: "Hikvision", label: "Cámara", variants: ["Bullet", "Domo", "Turret", "PTZ", "Varifocal", "WiFi"] },
+      { category: "CAMARAS PARA AUTOS - BUSES", brand: "Dahua", label: "Cámara", variants: ["Auto", "Bus", "Interior", "Exterior", "Radar", "Dual"] },
+      { category: "CANALETAS", brand: "IPE3", label: "Canaleta", variants: ["PVC", "Metal", "Flexible", "Exterior", "Interior", "Perfil"] },
+      { category: "CERCO ELECTRICO", brand: "IPE3", label: "Cerco", variants: ["Perimetral", "Línea", "Kit", "Control", "Módulo", "Alarm"] },
+      { category: "CONTRA INCENCIO", brand: "IPE3", label: "Sistema", variants: ["Detección", "Extintor", "Panel", "Notificación", "Kit", "Sensores"] },
+      { category: "DISCO DURO - MICRO SD - FLASH", brand: "Samsung", label: "Almacenamiento", variants: ["SSD", "MicroSD", "USB", "NVMe", "Enterprise", "A1"] },
+      { category: "DOMOTICA", brand: "IPE3", label: "Domótica", variants: ["Sensor", "Switch", "Kit", "Gateway", "Control", "Panel"] },
+      { category: "DRON", brand: "DJI", label: "Drone", variants: ["Mini", "Pro", "Avata", "Mavic", "Enterprise", "FPV"] },
+      { category: "EXTENSORES HDMI", brand: "Ugreen", label: "Extensor", variants: ["HDMI", "4K", "8K", "Cable", "Módulo", "Mini"] },
+      { category: "FIBRA ÓPTICA", brand: "FS", label: "Fibra", variants: ["SC", "LC", "OTDR", "Patch", "Distribución", "Módulo"] },
+      { category: "FILTROS DE AGUA", brand: "IPE3", label: "Filtro", variants: ["UV", "Carbon", "Torre", "Módulo", "Industrial", "Aqua"] },
+      { category: "GAMER", brand: "Logitech", label: "Gamer", variants: ["Mouse", "Teclado", "Headset", "Pad", "Kit", "Cam"] },
+      { category: "GPS RASTREADOR", brand: "Trackimo", label: "GPS", variants: ["Mini", "Auto", "Moto", "Asset", "Lite", "Pro"] },
+      { category: "IMPRESORAS", brand: "Epson", label: "Impresora", variants: ["Tinta", "Laser", "Matricial", "Plotter", "Industrial", "Eco"] },
+      { category: "LAMINAS INTELIGENTES", brand: "IPE3", label: "Lámina", variants: ["Smart", "Tint", "Control", "Panel", "Kit", "Plus"] },
+      { category: "LAMINAS SOLARES", brand: "Jinko", label: "Panel", variants: ["Solar", "Monocristalino", "Flex", "Kit", "Rooftop", "Offgrid"] },
+      { category: "LAPTOPS, ACCESORIOS PC", brand: "HP", label: "PC", variants: ["Laptop", "Monitor", "Teclado", "Mouse", "Dock", "Kit"] },
+      { category: "LIQUIDACION", brand: "IPE3", label: "Liquidación", variants: ["Oferta", "Exceso", "Stock", "Flash", "Outlet", "Cierre"] },
+      { category: "LUCES LED - LAMPARAS", brand: "Philips", label: "Luz", variants: ["LED", "Panel", "Exterior", "Interior", "Smart", "Tira"] },
+      { category: "MOTOR DE GARAJE Y PUERTA ENRROLLABLE", brand: "Nice", label: "Motor", variants: ["Garaje", "Puerta", "Kit", "Eje", "Drive", "Pro"] },
+      { category: "PANELES SOLARES Y REFLECTORES", brand: "Jinko", label: "Panel", variants: ["Solar", "Reflector", "Kit", "Carga", "Bosque", "Control"] },
+      { category: "PARLANTES", brand: "Sony", label: "Parlante", variants: ["BT", "Speaker", "Audio", "Mini", "Barra", "Urbano"] },
+      { category: "PARQUEADEROS - PARKEY", brand: "Parkeon", label: "Parqueo", variants: ["Control", "Módulo", "Kit", "Máquina", "Sensor", "Acceso"] },
+      { category: "PERIFONEO", brand: "ZKTeco", label: "Perifoneo", variants: ["Intercom", "KIT", "Video", "Audio", "Módulo", "Panel"] },
+      { category: "PROYECTORES - CONFERENCIAS", brand: "Epson", label: "Proyector", variants: ["HD", "4K", "Portátil", "Conference", "Office", "Ultra"] },
+      { category: "PUNTO DE VENTA", brand: "IPE3", label: "Punto", variants: ["Caja", "Lector", "Display", "Escáner", "Kit", "Venta"] },
+      { category: "RACKS", brand: "ZKTeco", label: "Rack", variants: ["Server", "NVR", "Switch", "Módulo", "Panel", "Montaje"] },
+      { category: "RADIO - COMUNICACIÓN", brand: "Motorola", label: "Radio", variants: ["Portátil", "Base", "Móvil", "Pro", "UHF", "VHF"] },
+      { category: "RASPBERRY", brand: "Raspberry", label: "Raspberry", variants: ["Pi4", "Pi5", "Zero", "Kit", "Display", "Power"] },
+      { category: "ROUTER Y SWITCH", brand: "TP-Link", label: "Equipo", variants: ["Router", "Switch", "PoE", "Core", "Edge", "Rack"] },
+      { category: "SCOOTER Y BICICLETAS", brand: "Xiaomi", label: "Vehículo", variants: ["E-scooter", "Bicicleta", "Carga", "City", "Pro", "Lite"] },
+      { category: "SEÑALETICA VIAL", brand: "IPE3", label: "Señal", variants: ["Vial", "Reflectiva", "Indicador", "Pare", "Stop", "Calle"] },
+      { category: "TELEFONIA IP", brand: "Grandstream", label: "Telefono", variants: ["IP", "Desk", "VoIP", "Base", "Panel", "GSM"] },
+      { category: "TELEVISORES-MONITORES-PANTALLAS", brand: "Samsung", label: "Pantalla", variants: ["TV", "Monitor", "Panel", "Digital", "Smart", "4K"] },
+      { category: "TUBERIA Y MANGUERA", brand: "IPE3", label: "Tubería", variants: ["PVC", "HDPE", "Manguera", "Conduit", "Flex", "Ajuste"] },
+      { category: "UPS - REGULADOR - PROTECTORES - GENERADOR", brand: "APC", label: "UPS", variants: ["Regulador", "Protector", "Generador", "Power", "Smart", "Pro"] },
+      { category: "VARIOS - TANQUE DE HELIO", brand: "IPE3", label: "Helio", variants: ["Tanque", "Kit", "Cilindro", "Carga", "Accesorio", "Gauss"] },
+      { category: "VIDEO JUEGOS - CONSOLAS", brand: "Sony", label: "Juego", variants: ["PS5", "Consola", "Pad", "VR", "Headset", "Kit"] },
+      { category: "VIDEO PORTERO Y PORTEROS ELECTRICOS", brand: "Dahua", label: "Portero", variants: ["Video", "Eléctrico", "Kit", "Panel", "Módulo", "Pro"] }
+    ];
+
+    function readRealCatalog() {
+      const rows = [];
+      const entries = Object.entries(REAL_PRODUCT_IMAGES || {});
+
+      entries.forEach(([categoryKey, imageList]) => {
+        const category = categoryKey
+          .split('-')
+          .filter(Boolean)
+          .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+          .join(' ');
+
+        (imageList || []).forEach((img, index) => {
+          const filename = String(img).split('/').pop().replace(/\.[^/.]+$/, '');
+          const cleaned = filename
+            .replace(/\b(dist|dista|dista|png|jpg|jpeg|webp)\b/gi, ' ')
+            .replace(/[_-]+/g, ' ')
+            .replace(/\s+/g, ' ')
+            .trim();
+          const baseName = cleaned || `Producto ${index + 1}`;
+          const prettyName = baseName
+            .replace(/\b(kit|camara|cámara|dash|cam|mvdr|dvr|nvr|tablero|led|wireless|portero|seguridad)\b/gi, (m) => m.toUpperCase())
+            .replace(/\s+/g, ' ')
+            .trim();
+
+          rows.push({
+            category,
+            name: prettyName || `${category} ${index + 1}`,
+            img,
+            index
+          });
+        });
+      });
+
+      return rows;
+    }
+
+    function normalizeCategoryName(raw) {
+      const clean = String(raw || '').trim();
+      if (!clean) return 'General';
+      return clean
+        .replace(/\s*[-–—]\s*/g, ' - ')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    function inferResolution(label) {
+      const text = String(label || '').toUpperCase();
+      if (text.includes('4K')) return '4K';
+      if (text.includes('1080')) return '1080p';
+      if (text.includes('8MP')) return '8MP';
+      if (text.includes('5MP')) return '5MP';
+      if (text.includes('4MP')) return '4MP';
+      if (text.includes('2MP')) return '2MP';
+      if (text.includes('POE')) return 'PoE';
+      if (text.includes('IP')) return 'IP';
+      return '4MP';
+    }
+
+    function inferBrand(category, label) {
+      const text = `${category} ${label}`.toUpperCase();
+      if (text.includes('DAHUA')) return 'Dahua';
+      if (text.includes('HIK')) return 'Hikvision';
+      if (text.includes('TP-LINK')) return 'TP-Link';
+      if (text.includes('EAGLE')) return 'Eagle';
+      if (text.includes('UBIQUITI')) return 'Ubiquiti';
+      if (text.includes('ZKT')) return 'ZKTeco';
+      if (text.includes('NICE')) return 'Nice';
+      if (text.includes('JINKO')) return 'Jinko';
+      return 'IPE3';
+    }
+
+    function buildCatalogFromFolders() {
+      const realRows = readRealCatalog();
+      const products = [];
+      let counter = 1;
+
+      realRows.forEach((row, index) => {
+        const category = normalizeCategoryName(row.category);
+        const baseName = String(row.name || '').trim();
+        const rawFile = String(row.img || '').toLowerCase();
+        const productName = baseName ? `${category} ${baseName}` : category;
+        const isCatalogSheet = /dash[- ]cam|dashcam|dist-2024|whatsapp image|mvdr|camara tablero/i.test(`${category} ${baseName}`.toLowerCase()) && /dist|what|catalog|sheet/i.test(rawFile);
+        const brand = inferBrand(category, row.name);
+        const resolution = inferResolution(row.name);
+        const baseCost = 90 + ((counter * 31) % 820) + (index % 9) * 24;
+        const fallbackArt = () => makeProductArt(productName, ['#36d399','#24add7','#7dd3fc','#a78bfa','#fbbf24','#2dd4bf'][index % 6], ['#183b78','#0ea5e9','#312e81','#0f766e','#22c55e','#1d4ed8'][index % 6]);
+
+        products.push({
+          id: `ipe3-${String(counter).padStart(4, '0')}`,
+          code: `MOD-${String(counter).padStart(4, '0')}`,
+          name: productName,
+          category,
+          brand,
+          resolution,
+          description: `${productName} para ${category.toLowerCase()} con desempeño profesional, instalación simple y compatibilidad con sistemas CCTV e integraciones modernas.`,
+          cost: Number((baseCost / 1.2).toFixed(2)),
+          stock: index % 4 === 0 ? 'Pedido' : 'Disponible',
+          img: isCatalogSheet ? fallbackArt() : (row.img || fallbackArt()),
+          imgPosition: 'center center',
+          features: [
+            resolution,
+            brand,
+            index % 2 === 0 ? 'Instalación rápida' : 'Alta compatibilidad',
+            index % 3 === 0 ? 'Soporte profesional' : 'Uso industrial',
+            index % 4 === 0 ? 'Calidad IP' : 'Control inteligente'
+          ]
+        });
+
+        counter += 1;
+      });
+
+      if (!products.length) {
+        CATEGORY_SEEDS.forEach((seed) => {
+          for (let i = 0; i < 10; i++) {
+            const model = `${seed.label} ${seed.variants[i % seed.variants.length]} ${i + 1}`;
+            products.push({
+              id: `ipe3-${String(counter).padStart(4, '0')}`,
+              code: `MOD-${String(counter).padStart(4, '0')}`,
+              name: `${seed.category} ${seed.variants[i % seed.variants.length]} ${i + 1}`,
+              category: seed.category,
+              brand: seed.brand,
+              resolution: ['2MP', '4MP', '5MP', '8MP'][i % 4],
+              description: `${model} para ${seed.category.toLowerCase()} con desempeño profesional.`,
+              cost: 80 + i * 17,
+              stock: i % 3 === 0 ? 'Pedido' : 'Disponible',
+              img: makeProductArt(model),
+              imgPosition: 'center center',
+              features: ['4MP', seed.brand, 'Instalación rápida', 'Soporte profesional', 'Calidad IP']
+            });
+            counter += 1;
+          }
+        });
+      }
+
+      return products;
+    }
+
+    const PRODUCTS = buildCatalogFromFolders();
 
     const state = {
       selected: new Set(),
       cart: [],
-      shown: 6,
+      shown: 24,
       activeTab: "catalogo"
     };
 
@@ -519,18 +635,47 @@
       return [...new Set(PRODUCTS.map(p => p[key]).filter(Boolean))].sort();
     }
 
-    function renderFilters(){
-      const categories = getUniqueValues("category");
-      const brands = getUniqueValues("brand");
-      const resolutions = getUniqueValues("resolution");
+    function getFilteredValues(key, overrides = {}){
+      const byCategory = overrides.category || "";
+      const byBrand = overrides.brand || "";
 
+      return [...new Set(PRODUCTS.filter(product => {
+        if (byCategory && product.category !== byCategory) return false;
+        if (byBrand && product.brand !== byBrand) return false;
+        return Boolean(product[key]);
+      }).map(product => product[key]))].sort();
+    }
+
+    function renderFilters(){
       const catFilter = document.getElementById("catFilter");
       const brandFilter = document.getElementById("brandFilter");
       const resolutionFilter = document.getElementById("resolutionFilter");
 
+      const selectedCategory = catFilter.value || "";
+      const selectedBrand = brandFilter.value || "";
+      const selectedResolution = resolutionFilter.value || "";
+
+      const categories = getUniqueValues("category");
+      const brandOptions = selectedCategory
+        ? getFilteredValues("brand", { category: selectedCategory })
+        : getUniqueValues("brand");
+      const resolutionOptions = selectedCategory
+        ? (selectedBrand
+          ? getFilteredValues("resolution", { category: selectedCategory, brand: selectedBrand })
+          : getFilteredValues("resolution", { category: selectedCategory }))
+        : getUniqueValues("resolution");
+
       catFilter.innerHTML = '<option value="">Todas</option>' + categories.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join("");
-      brandFilter.innerHTML = '<option value="">Todas</option>' + brands.map(b => `<option value="${esc(b)}">${esc(b)}</option>`).join("");
-      resolutionFilter.innerHTML = '<option value="">Todas</option>' + resolutions.map(r => `<option value="${esc(r)}">${esc(r)}</option>`).join("");
+      catFilter.value = categories.includes(selectedCategory) ? selectedCategory : "";
+
+      brandFilter.innerHTML = '<option value="">Todas</option>' + brandOptions.map(b => `<option value="${esc(b)}">${esc(b)}</option>`).join("");
+      brandFilter.value = brandOptions.includes(selectedBrand) ? selectedBrand : "";
+
+      resolutionFilter.innerHTML = '<option value="">Todas</option>' + resolutionOptions.map(r => `<option value="${esc(r)}">${esc(r)}</option>`).join("");
+      resolutionFilter.value = resolutionOptions.includes(selectedResolution) ? selectedResolution : "";
+
+      brandFilter.disabled = !catFilter.value;
+      resolutionFilter.disabled = !brandFilter.value;
     }
 
     function getFilteredProducts(){
@@ -558,7 +703,7 @@
 
     function renderProducts(){
       const filtered = getFilteredProducts().slice(0, state.shown);
-      catalogStatus.textContent = `${filtered.length} referencias · filtros aplicados`;
+      catalogStatus.textContent = `${filtered.length} de ${PRODUCTS.length} referencias · filtros aplicados`;
 
       if (!filtered.length) {
         productsEl.innerHTML = '<div class="empty">Sin coincidencias.</div>';
@@ -575,11 +720,12 @@
               Seleccionar
             </label>
             <button class="image-open" type="button" onclick="openDialog('${p.id}')">
-              <img src="${p.img}" alt="${esc(p.name)}">
+              <img src="${p.img}" alt="${esc(p.name)}" style="object-position:${esc(p.imgPosition || 'center center')};">
             </button>
             <div class="muted">${esc(p.category)} · ${esc(p.brand)}</div>
             <h3>${esc(p.name)}</h3>
             <p class="muted desc">${esc(p.description)}</p>
+            <div class="muted">Código: ${esc(p.code || p.id)}</div>
             <div class="muted">Stock: ${esc(p.stock)}</div>
             <div class="price">${money(sale)}</div>
             <small class="muted">Precio de venta + IVA</small>
@@ -667,9 +813,9 @@
 
       dialogContent.innerHTML = `
         <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start;">
-          <img src="${product.img}" alt="${esc(product.name)}" style="width:220px;max-width:100%;height:180px;object-fit:contain;border-radius:12px;background:#08111f;border:1px solid rgba(255,255,255,.05);">
+          <img src="${product.img}" alt="${esc(product.name)}" style="width:220px;max-width:100%;height:180px;object-fit:cover;object-position:${esc(product.imgPosition || 'center center')};border-radius:12px;background:#08111f;border:1px solid rgba(255,255,255,.05);">
           <div style="flex:1;min-width:220px;">
-            <div class="muted">${esc(product.category)} · ${esc(product.brand)}</div>
+            <div class="muted">${esc(product.category)} · ${esc(product.brand)} · Código: ${esc(product.code || product.id)}</div>
             <h2 style="margin:8px 0;">${esc(product.name)}</h2>
             <div class="price">${money(priceOf(product))}</div>
             <small class="muted">Precio de venta + IVA</small>
@@ -738,9 +884,12 @@
       document.getElementById("catFilter").value = "";
       document.getElementById("brandFilter").value = "";
       document.getElementById("resolutionFilter").value = "";
+      document.getElementById("brandFilter").disabled = true;
+      document.getElementById("resolutionFilter").disabled = true;
       document.getElementById("minPrice").value = "";
       document.getElementById("maxPrice").value = "";
-      state.shown = 6;
+      state.shown = 24;
+      renderFilters();
       renderProducts();
     });
 
@@ -826,22 +975,54 @@
     });
 
     document.getElementById("moreProducts").addEventListener("click", () => {
-      state.shown += 6;
+      state.shown += 24;
       renderProducts();
     });
 
     document.getElementById("search").addEventListener("input", () => {
-      state.shown = 6;
+      state.shown = 24;
       renderProducts();
     });
 
-    ["catFilter", "brandFilter", "resolutionFilter", "minPrice", "maxPrice"].forEach(id => {
+    document.getElementById("catFilter").addEventListener("change", () => {
+      const catFilter = document.getElementById("catFilter");
+      const brandFilter = document.getElementById("brandFilter");
+      const resolutionFilter = document.getElementById("resolutionFilter");
+
+      if (catFilter.value !== "") {
+        brandFilter.value = "";
+        resolutionFilter.value = "";
+      } else {
+        brandFilter.value = "";
+        resolutionFilter.value = "";
+      }
+
+      renderFilters();
+      state.shown = 24;
+      renderProducts();
+    });
+
+    document.getElementById("brandFilter").addEventListener("change", () => {
+      const brandFilter = document.getElementById("brandFilter");
+      const resolutionFilter = document.getElementById("resolutionFilter");
+      resolutionFilter.value = "";
+      renderFilters();
+      state.shown = 24;
+      renderProducts();
+    });
+
+    document.getElementById("resolutionFilter").addEventListener("change", () => {
+      state.shown = 24;
+      renderProducts();
+    });
+
+    ["minPrice", "maxPrice"].forEach(id => {
       document.getElementById(id).addEventListener("input", () => {
-        state.shown = 6;
+        state.shown = 24;
         renderProducts();
       });
       document.getElementById(id).addEventListener("change", () => {
-        state.shown = 6;
+        state.shown = 24;
         renderProducts();
       });
     });
