@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://ipe3ec.github.io/engineering/sitemap.xml
