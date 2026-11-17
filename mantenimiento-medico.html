@@ -10,6 +10,7 @@
 <meta property="og:url" content="https://ipe3ec.github.io/engineering/mantenimiento-medico.html"/>
 <title>Mantenimiento de Equipos Médicos en Quito | IPE3 Engineering</title>
 <link rel="canonical" href="https://ipe3ec.github.io/engineering/mantenimiento-medico.html"/>
+<link rel="stylesheet" href="./static/css/ipe3-theme.css">
       <link rel="icon" type="image/x-icon" href="static/icons/favicon.ico">
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
@@ -21,9 +22,9 @@
         theme: {
           extend: {
             colors: {
-              "primary": "#0df2df",
+              "primary": "#00d2ff",
               "background-light": "#f5f8f8",
-              "background-dark": "#102221",
+              "background-dark": "#0a0c10",
             },
             fontFamily: {
               "display": ["Space Grotesk"]
@@ -80,7 +81,7 @@
             color: white;
             padding: 12px;
         }
-        .quote-field:focus { outline: 2px solid #0df2df; outline-offset: 2px; }
+        .quote-field:focus { outline: 2px solid #00d2ff; outline-offset: 2px; }
         .quote-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
         @media (max-width: 640px) { .quote-grid { grid-template-columns: 1fr; } }
     </style>
@@ -402,7 +403,7 @@
         <span class="mt-2 block text-xs text-slate-400">Máximo 5 archivos; cada imagen puede incluir datos técnicos, placas o estado del equipo.</span>
       </label>
       <label class="flex items-start gap-3 text-sm text-slate-300">
-        <input type="checkbox" name="consentimiento" required class="mt-1 accent-[#0df2df]">
+        <input type="checkbox" name="consentimiento" required class="mt-1 accent-[#00d2ff]">
         <span>Acepto que IPE3 Engineering use estos datos para preparar y dar seguimiento a la cotización.</span>
       </label>
       <div id="quoteStatus" class="hidden rounded-lg border border-primary/20 bg-primary/5 p-3 text-sm text-slate-200" role="status"></div>

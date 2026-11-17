@@ -1,0 +1,14 @@
+:root {
+  --ipe3-cyan: #00d2ff;
+  --ipe3-blue: #0072ff;
+  --ipe3-background: #0a0c10;
+  --ipe3-panel: #151d2c;
+  --ipe3-text: #e2e8f0;
+  --ipe3-muted: #adb9cc;
+}
+
+body {
+  background: var(--ipe3-background);
+  color: var(--ipe3-text);
+  font-family: "Space Grotesk", Arial, sans-serif;
+}
