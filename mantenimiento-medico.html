@@ -88,42 +88,23 @@
 </head>
 <body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 selection:bg-primary selection:text-background-dark">
 <!-- Header -->
-<header class="sticky top-0 z-50 w-full border-b border-primary/10 bg-background-dark/80 backdrop-blur-md">
-  <div class="max-w-7xl mx-auto px-6 lg:px-12 flex h-20 items-center justify-between">
-    <!-- Logo -->
-    <a class="flex items-center gap-3" href="./index.html" aria-label="IPE3 Engineering, inicio">
-      <div class="w-12 h-12">
-        <img src="static/img/ipe3-logo.png" alt="Logo IPE3" class="w-full h-full object-contain">
-      </div>
-      <div>
-        <h1 class="text-xl font-bold tracking-tight text-slate-100">IPE3 <span class="text-primary font-light">Engineering</span></h1>
-        <p class="text-[10px] uppercase tracking-widest text-primary/60 leading-none">by CORPORACIÓN 360</p>
-      </div>
+<header class="ipe3-header">
+  <div class="ipe3-header-inner">
+    <a class="ipe3-brand" href="./index.html" aria-label="IPE3 Engineering, inicio">
+      <img class="ipe3-brand-logo" src="./static/img/ipe3-logo.png" alt="Logo IPE3 Engineering" width="72" height="72">
+      <span class="ipe3-brand-copy">
+        <strong class="ipe3-brand-name">IPE3® <span>Engineering</span></strong>
+        <small class="ipe3-brand-tagline">BY CORPORACIÓN 360</small>
+      </span>
     </a>
-
-    <!-- Navegación -->
-    <nav class="hidden md:flex items-center gap-10">
-      <a class="text-sm font-medium text-slate-300 hover:text-primary transition-colors" href="./index.html">← Volver al inicio</a>
-      <a class="text-sm font-medium text-slate-300 hover:text-primary transition-colors" href="./index.html">Inicio</a>
-      <a class="text-sm font-medium text-slate-300 hover:text-primary transition-colors" href="./servicios.html">Servicios</a>
-      <a class="text-sm font-medium text-slate-300 hover:text-primary transition-colors" href="./proyectos.html">Proyectos</a>
-      <a class="text-sm font-medium text-slate-300 hover:text-primary transition-colors" href="./nosotros.html">Nosotros</a>
-      <a class="text-sm font-medium text-slate-300 hover:text-primary transition-colors" href="./index.html#contacto">Contacto</a>
+    <nav class="ipe3-nav" aria-label="Navegación principal">
+      <a href="./index.html">Inicio</a>
+      <a href="./servicios.html">Servicios</a>
+      <a href="./proyectos.html">Proyectos</a>
+      <a href="./nosotros.html">Nosotros</a>
+      <a href="./index.html#contacto">Contacto</a>
     </nav>
-
-    <!-- Botones -->
-    <div class="flex items-center gap-4">
-      <!-- Botón Soporte 24/7 -->
-      <a href="https://wa.me/593984016027" target="_blank" rel="noopener" class="hidden lg:flex items-center gap-2 bg-primary/10 border border-primary/30 text-primary px-4 py-2 rounded-lg text-sm font-bold hover:bg-primary hover:text-background-dark transition-all">
-        <span class="material-symbols-outlined text-sm">emergency</span>
-        Soporte 24/7
-      </a>
-
-      <!-- Botón Solicitar Soporte -->
-      <button type="button" data-open-quote class="bg-primary text-background-dark px-5 py-2.5 rounded-lg text-sm font-bold hover:brightness-110 transition-all">
-        Solicitar Soporte
-      </button>
-    </div>
+    <button class="ipe3-header-cta" type="button" data-open-quote>Cotizar</button>
   </div>
 </header>
 <main>

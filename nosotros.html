@@ -46,27 +46,16 @@
 </head>
 <body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 transition-colors duration-300">
 <!-- Top Navigation Bar -->
-<header class="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-slate-800 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md">
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-<div class="flex items-center justify-between h-20">
-<div class="flex items-center gap-3">
-<a href="./index.html" aria-label="Volver al inicio"><img src="./static/img/ipe3-logo.png" alt="Logo IPE3 Engineering" class="size-12 object-contain"></a>
-<span class="text-xl font-black tracking-tighter uppercase dark:text-white">IPE3 Engineering</span>
-</div>
-<nav class="hidden md:flex items-center gap-8">
-<a class="text-sm font-semibold hover:text-primary transition-colors" href="./index.html">← Volver al inicio</a>
-<a class="text-sm font-semibold hover:text-primary transition-colors" href="./index.html">Inicio</a>
-<a class="text-sm font-semibold hover:text-primary transition-colors" href="./servicios.html">Servicios</a>
-<a class="text-sm font-semibold text-primary" href="./nosotros.html">Nosotros</a>
-<a class="text-sm font-semibold hover:text-primary transition-colors" href="./proyectos.html">Proyectos</a>
-<a class="text-sm font-semibold hover:text-primary transition-colors" href="./index.html#contacto">Contacto</a>
+<header class="ipe3-header">
+<div class="ipe3-header-inner">
+<a class="ipe3-brand" href="./index.html" aria-label="IPE3 Engineering, inicio">
+<img class="ipe3-brand-logo" src="./static/img/ipe3-logo.png" alt="Logo IPE3 Engineering" width="72" height="72">
+<span class="ipe3-brand-copy"><strong class="ipe3-brand-name">IPE3® <span>Engineering</span></strong><small class="ipe3-brand-tagline">BY CORPORACIÓN 360</small></span>
+</a>
+<nav class="ipe3-nav" aria-label="Navegación principal">
+<a href="./index.html">Inicio</a><a href="./servicios.html">Servicios</a><a href="./proyectos.html">Proyectos</a><a href="./nosotros.html">Nosotros</a><a href="./index.html#contacto">Contacto</a>
 </nav>
-<div class="flex items-center gap-4">
-<button class="bg-primary text-background-dark px-6 py-2.5 rounded-lg font-bold text-sm tracking-wide hover:brightness-110 transition-all uppercase">
-                        Cotizar
-                    </button>
-</div>
-</div>
+<a class="ipe3-header-cta" href="https://wa.me/593984016027" target="_blank" rel="noopener">Cotizar</a>
 </div>
 </header>
 <main>

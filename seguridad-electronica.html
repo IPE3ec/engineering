@@ -72,27 +72,16 @@
 </head>
 <body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 antialiased">
 <!-- Top Navigation Bar -->
-<header class="sticky top-0 z-50 w-full border-b border-white/5 bg-background-dark/80 backdrop-blur-md">
-<div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-<div class="flex items-center gap-3">
-<a href="./index.html" aria-label="Volver al inicio"><img src="./static/img/ipe3-logo.png" alt="Logo IPE3 Engineering" class="size-12 object-contain"></a>
-<div>
-<h1 class="text-xl font-bold tracking-tight text-white leading-none">IPE3 Engineering</h1>
-<p class="text-[10px] uppercase tracking-[0.2em] text-primary font-bold">Corporación 360</p>
-</div>
-</div>
-<nav class="hidden md:flex items-center gap-10">
-<a class="text-sm font-medium hover:text-primary transition-colors" href="./index.html">← Volver al inicio</a>
-<a class="text-sm font-medium hover:text-primary transition-colors" href="./servicios.html">Servicios</a>
-<a class="text-sm font-medium hover:text-primary transition-colors" href="./seguridad-electronica.html">Especificaciones</a>
-<a class="text-sm font-medium hover:text-primary transition-colors" href="./proyectos.html">Proyectos</a>
-<a class="text-sm font-medium hover:text-primary transition-colors" href="./index.html#contacto">Contacto</a>
+<header class="ipe3-header">
+<div class="ipe3-header-inner">
+<a class="ipe3-brand" href="./index.html" aria-label="IPE3 Engineering, inicio">
+<img class="ipe3-brand-logo" src="./static/img/ipe3-logo.png" alt="Logo IPE3 Engineering" width="72" height="72">
+<span class="ipe3-brand-copy"><strong class="ipe3-brand-name">IPE3® <span>Engineering</span></strong><small class="ipe3-brand-tagline">BY CORPORACIÓN 360</small></span>
+</a>
+<nav class="ipe3-nav" aria-label="Navegación principal">
+<a href="./index.html">Inicio</a><a href="./servicios.html">Servicios</a><a href="./proyectos.html">Proyectos</a><a href="./nosotros.html">Nosotros</a><a href="./index.html#contacto">Contacto</a>
 </nav>
-<div class="flex items-center gap-4">
-<button class="bg-primary hover:bg-primary/90 text-white px-6 py-2.5 rounded-lg text-sm font-bold transition-all transform hover:scale-105">
-                    Solicitar Cotización
-                </button>
-</div>
+<a class="ipe3-header-cta" href="https://wa.me/593984016027" target="_blank" rel="noopener">Cotizar</a>
 </div>
 </header>
 <main>

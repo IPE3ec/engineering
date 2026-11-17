@@ -12,3 +12,164 @@ body {
   color: var(--ipe3-text);
   font-family: "Space Grotesk", Arial, sans-serif;
 }
+
+.ipe3-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(10, 12, 16, 0.96);
+  backdrop-filter: blur(14px);
+}
+
+.ipe3-header-inner {
+  position: relative;
+  z-index: 1;
+  width: min(1200px, calc(100% - 40px));
+  min-height: 92px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(270px, auto) 1fr auto;
+  align-items: center;
+  gap: 28px;
+}
+
+.ipe3-brand {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: var(--ipe3-text);
+  text-decoration: none;
+}
+
+.ipe3-brand-logo {
+  display: block;
+  flex: 0 0 72px;
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+}
+
+.ipe3-brand-copy {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+}
+
+.ipe3-brand-name {
+  color: #f7fbff;
+  font-size: clamp(19px, 2vw, 25px);
+  font-weight: 700;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.ipe3-brand-name span {
+  color: var(--ipe3-cyan);
+}
+
+.ipe3-brand-tagline {
+  color: #b7c5d5;
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.ipe3-nav {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: clamp(12px, 2vw, 26px);
+}
+
+.ipe3-nav a {
+  color: #d3deeb;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.ipe3-nav a:hover,
+.ipe3-nav a:focus-visible {
+  color: var(--ipe3-cyan);
+}
+
+.ipe3-header-cta {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9px;
+  background: var(--ipe3-cyan);
+  padding: 0 18px;
+  color: #06121a;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.ipe3-header-cta:hover,
+.ipe3-header-cta:focus-visible {
+  background: #75e6ff;
+}
+
+@media (max-width: 980px) {
+  .ipe3-header-inner {
+    grid-template-columns: 1fr auto;
+    gap: 0 18px;
+    padding: 10px 0 12px;
+  }
+
+  .ipe3-nav {
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding: 10px 0 2px;
+    scrollbar-width: thin;
+  }
+}
+
+@media (max-width: 520px) {
+  .ipe3-header-inner {
+    width: calc(100% - 28px);
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .ipe3-brand {
+    gap: 10px;
+  }
+
+  .ipe3-brand-logo {
+    flex-basis: 58px;
+    width: 58px;
+    height: 58px;
+  }
+
+  .ipe3-brand-name {
+    font-size: 19px;
+  }
+
+  .ipe3-brand-tagline {
+    font-size: 9px;
+    letter-spacing: 0.12em;
+  }
+
+  .ipe3-header-cta {
+    min-height: 40px;
+    padding: 0 12px;
+    font-size: 12px;
+  }
+
+  .ipe3-nav {
+    gap: 18px;
+  }
+
+  .ipe3-nav a {
+    font-size: 13px;
+  }
+}
