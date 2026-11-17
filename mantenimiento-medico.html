@@ -51,6 +51,38 @@
             .hero-mobile p { font-size: 1rem; }
             .hero-actions { flex-direction: column; align-items: stretch; }
         }
+        .quote-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            display: none;
+            place-items: center;
+            padding: 20px;
+            background: rgba(2, 8, 14, 0.82);
+            backdrop-filter: blur(12px);
+        }
+        .quote-modal.open { display: grid; }
+        .quote-panel {
+            width: min(760px, 100%);
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+            background: #102221;
+            border: 1px solid rgba(13, 242, 223, 0.25);
+            border-radius: 18px;
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+        }
+        .quote-field {
+            width: 100%;
+            margin-top: 8px;
+            border: 1px solid #334155;
+            border-radius: 10px;
+            background: #0a1716;
+            color: white;
+            padding: 12px;
+        }
+        .quote-field:focus { outline: 2px solid #0df2df; outline-offset: 2px; }
+        .quote-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+        @media (max-width: 640px) { .quote-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 selection:bg-primary selection:text-background-dark">
@@ -61,12 +93,12 @@
     <a class="flex items-center gap-3" href="./index.html" aria-label="IPE3 Engineering, inicio">
       <div class="w-12 h-12">
         <img src="static/img/ipe3-logo.png" alt="Logo IPE3" class="w-full h-full object-contain">
-      </a>
+      </div>
       <div>
         <h1 class="text-xl font-bold tracking-tight text-slate-100">IPE3 <span class="text-primary font-light">Engineering</span></h1>
         <p class="text-[10px] uppercase tracking-widest text-primary/60 leading-none">by CORPORACIÓN 360</p>
       </div>
-    </div>
+    </a>
 
     <!-- Navegación -->
     <nav class="hidden md:flex items-center gap-10">
@@ -86,9 +118,9 @@
       </a>
 
       <!-- Botón Solicitar Soporte -->
-      <a href="https://wa.me/593984016027?text=Hola,%20necesito%20soporte%20para%20un%20equipamiento%20médico" target="_blank" rel="noopener" class="bg-primary text-background-dark px-5 py-2.5 rounded-lg text-sm font-bold hover:brightness-110 transition-all">
+      <button type="button" data-open-quote class="bg-primary text-background-dark px-5 py-2.5 rounded-lg text-sm font-bold hover:brightness-110 transition-all">
         Solicitar Soporte
-      </a>
+      </button>
     </div>
   </div>
 </header>
@@ -115,10 +147,10 @@
                         Especialistas en sistemas eléctricos y electrónicos de alta complejidad en Quito. Garantizamos la operatividad crítica de su infraestructura hospitalaria.
                     </p>
 <div class="hero-actions flex items-center gap-4 pt-4">
-<a href="https://wa.me/593984016027?text=Hola,%20quiero%20agendar%20mantenimiento%20para%20un%20equipamiento%20médico" target="_blank" rel="noopener" class="bg-primary text-background-dark px-8 py-4 rounded-xl text-base font-bold flex items-center justify-center gap-3 hover:scale-105 transition-transform">
+<button type="button" data-open-quote class="bg-primary text-background-dark px-8 py-4 rounded-xl text-base font-bold flex items-center justify-center gap-3 hover:scale-105 transition-transform">
                             Agendar Mantenimiento
                             <span class="material-symbols-outlined">arrow_forward</span>
-</a>
+</button>
 <a href="#equipos" class="bg-white/5 backdrop-blur-sm border border-white/10 text-white px-8 py-4 rounded-xl text-base font-medium text-center hover:bg-white/10 transition-all">
                             Ver Certificaciones
 </a>
@@ -289,14 +321,97 @@
 <span class="material-symbols-outlined">call</span>
                             Llamar Ahora
                         </a>
-<a href="https://wa.me/593984016027?text=Hola,%20necesito%20una%20cotización%20para%20mantenimiento%20especializado" target="_blank" rel="noopener" class="bg-white/5 border border-white/10 text-white px-10 py-5 rounded-xl text-lg font-bold text-center hover:bg-white/10 transition-all">
+<button type="button" data-open-quote class="bg-white/5 border border-white/10 text-white px-10 py-5 rounded-xl text-lg font-bold text-center hover:bg-white/10 transition-all">
                             Solicitar Presupuesto
-</a>
+</button>
 </div>
 </div>
 </div>
 </section>
 </main>
+<div class="quote-modal" id="quoteModal" role="dialog" aria-modal="true" aria-labelledby="quoteTitle">
+  <div class="quote-panel">
+    <div class="flex items-start justify-between gap-6 border-b border-white/10 px-6 py-5">
+      <div>
+        <p class="text-primary text-xs font-bold uppercase tracking-widest">Solicitud técnica</p>
+        <h2 id="quoteTitle" class="mt-1 text-2xl font-bold text-white">Crear cotización</h2>
+      </div>
+      <button type="button" id="closeQuote" class="rounded-lg border border-white/10 px-3 py-2 text-white" aria-label="Cerrar cotización">X</button>
+    </div>
+    <form id="quoteForm" class="space-y-5 p-6">
+      <div class="quote-grid">
+        <label class="text-sm font-semibold text-slate-200">Nombre completo *
+          <input class="quote-field" name="nombre" required autocomplete="name">
+        </label>
+        <label class="text-sm font-semibold text-slate-200">Teléfono *
+          <input class="quote-field" name="telefono" required type="tel" autocomplete="tel">
+        </label>
+        <label class="text-sm font-semibold text-slate-200">Correo electrónico
+          <input class="quote-field" name="email" type="email" autocomplete="email">
+        </label>
+        <label class="text-sm font-semibold text-slate-200">Institución / empresa
+          <input class="quote-field" name="institucion" autocomplete="organization">
+        </label>
+      </div>
+      <div class="quote-grid">
+        <label class="text-sm font-semibold text-slate-200">Tipo de servicio *
+          <select class="quote-field" name="servicio" required>
+            <option value="">Selecciona un servicio</option>
+            <option>Mantenimiento preventivo</option>
+            <option>Mantenimiento correctivo</option>
+            <option>Calibración y certificación</option>
+            <option>Diagnóstico técnico</option>
+            <option>Compra o cotización de repuesto</option>
+            <option>Servicio urgente</option>
+          </select>
+        </label>
+        <label class="text-sm font-semibold text-slate-200">Tipo de equipo *
+          <select class="quote-field" name="categoria" required>
+            <option value="">Selecciona una categoría</option>
+            <option>Imagenología</option>
+            <option>Laboratorio clínico</option>
+            <option>Soporte de vida</option>
+            <option>Electromecánico</option>
+            <option>Otro equipo</option>
+          </select>
+        </label>
+      </div>
+      <div class="quote-grid">
+        <label class="text-sm font-semibold text-slate-200">Marca y modelo
+          <input class="quote-field" name="modelo" placeholder="Ej. Philips Intellivue MX40">
+        </label>
+        <label class="text-sm font-semibold text-slate-200">Número de equipos
+          <input class="quote-field" name="cantidad" type="number" min="1" value="1" required>
+        </label>
+        <label class="text-sm font-semibold text-slate-200">Ciudad
+          <input class="quote-field" name="ciudad" value="Quito" autocomplete="address-level2">
+        </label>
+        <label class="text-sm font-semibold text-slate-200">Urgencia
+          <select class="quote-field" name="urgencia" required>
+            <option>Normal</option>
+            <option>Prioritaria</option>
+            <option>Emergencia</option>
+          </select>
+        </label>
+      </div>
+      <label class="block text-sm font-semibold text-slate-200">Descripción del problema o requerimiento *
+        <textarea class="quote-field min-h-28" name="descripcion" minlength="10" maxlength="1500" required></textarea>
+      </label>
+      <label class="block text-sm font-semibold text-slate-200">Fotos o documentos
+        <input class="quote-field" name="archivos" type="file" accept="image/*,.pdf" multiple>
+        <span class="mt-2 block text-xs text-slate-400">Máximo 5 archivos; cada imagen puede incluir datos técnicos, placas o estado del equipo.</span>
+      </label>
+      <label class="flex items-start gap-3 text-sm text-slate-300">
+        <input type="checkbox" name="consentimiento" required class="mt-1 accent-[#0df2df]">
+        <span>Acepto que IPE3 Engineering use estos datos para preparar y dar seguimiento a la cotización.</span>
+      </label>
+      <div id="quoteStatus" class="hidden rounded-lg border border-primary/20 bg-primary/5 p-3 text-sm text-slate-200" role="status"></div>
+      <button id="quoteSubmit" type="submit" class="w-full rounded-xl bg-primary px-6 py-4 font-bold text-background-dark hover:brightness-110">
+        Enviar solicitud
+      </button>
+    </form>
+  </div>
+</div>
 <!-- Footer -->
 <footer class="bg-background-dark pt-24 pb-12 relative overflow-hidden">
 <div class="absolute inset-0 constellation-bg opacity-30"></div>
@@ -373,4 +488,5 @@
             ¿Necesita ayuda inmediata?
         </div>
 </a>
+<script src="./cotizador.js"></script>
 </body></html>

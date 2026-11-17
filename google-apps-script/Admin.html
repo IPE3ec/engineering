@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>IPE3 - Cotizaciones</title>
+  <style>
+    body { margin:0; background:#081015; color:#e8edf5; font-family:system-ui,sans-serif; }
+    main { max-width:1100px; margin:auto; padding:24px; }
+    h1 { margin:0 0 20px; }
+    .toolbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+    button, select { font:inherit; }
+    button { border:0; border-radius:8px; background:#0df2df; color:#08201e; padding:10px 14px; font-weight:700; cursor:pointer; }
+    .card { border:1px solid #263a40; background:#10201f; border-radius:12px; padding:16px; margin-bottom:12px; }
+    .top { display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+    .meta { color:#9fb7b4; font-size:13px; }
+    .description { white-space:pre-wrap; }
+    select { border:1px solid #3b5551; border-radius:8px; background:#0a1716; color:white; padding:8px; }
+    a { color:#0df2df; }
+  </style>
+</head>
+<body>
+<main>
+  <div class="toolbar">
+    <h1>Cotizaciones</h1>
+    <button type="button" onclick="loadQuotes()">Actualizar</button>
+  </div>
+  <div id="quotes">Cargando...</div>
+</main>
+<script>
+function escapeHtml(value) {
+  const node = document.createElement("div");
+  node.textContent = value == null ? "" : value;
+  return node.innerHTML;
+}
+function loadQuotes() {
+  document.getElementById("quotes").textContent = "Cargando...";
+  google.script.run
+    .withSuccessHandler(render)
+    .withFailureHandler((error) => {
+      document.getElementById("quotes").textContent = error.message || "No autorizado.";
+    })
+    .getQuotes();
+}
+function render(rows) {
+  if (!rows.length) {
+    document.getElementById("quotes").textContent = "No hay cotizaciones.";
+    return;
+  }
+  document.getElementById("quotes").innerHTML = rows.map((row) => `
+    <article class="card">
+      <div class="top">
+        <strong>${escapeHtml(row.code)}</strong>
+        <span class="meta">${escapeHtml(row.date)} · ${escapeHtml(row.urgency)}</span>
+      </div>
+      <p><strong>${escapeHtml(row.name)}</strong> · ${escapeHtml(row.phone)} · ${escapeHtml(row.email)}</p>
+      <p class="meta">${escapeHtml(row.institution)} · ${escapeHtml(row.service)} · ${escapeHtml(row.category)} · ${escapeHtml(row.model)}</p>
+      <p class="description">${escapeHtml(row.description)}</p>
+      ${row.files ? `<p>${row.files.split("\n").filter(Boolean).map((url) => `<a href="${escapeHtml(url)}" target="_blank" rel="noopener">Archivo adjunto</a>`).join(" · ")}</p>` : ""}
+      <label>Estado
+        <select onchange="updateStatus('${escapeHtml(row.code)}', this.value)">
+          ${["Nueva","Contactada","Cotizada","Aceptada","Rechazada","Completada"].map((status) =>
+            `<option${status === row.status ? " selected" : ""}>${status}</option>`
+          ).join("")}
+        </select>
+      </label>
+    </article>
+  `).join("");
+}
+function updateStatus(code, status) {
+  google.script.run
+    .withSuccessHandler(loadQuotes)
+    .withFailureHandler((error) => alert(error.message))
+    .updateQuoteStatus(code, status);
+}
+loadQuotes();
+</script>
+</body>
+</html>
