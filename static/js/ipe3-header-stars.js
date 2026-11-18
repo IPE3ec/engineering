@@ -51,6 +51,8 @@
   const MAX_HISTORY = 6;
   const MAX_MESSAGE_LENGTH = 1200;
   const REQUEST_TIMEOUT_MS = 45000;
+  const apiEndpoint = "https://script.google.com/macros/s/AKfycbysdWCW_xUoOypezEPFtpv6oSwozlWWHu5hqlwTK1aTMMrgHTdSy-FmoNQeBwURv6sJbw/exec";
+  const whatsappNumber = "593984016027";
   const WELCOME_MESSAGE =
     "Hola, soy ALMA. Puedo orientarte y conectarte con especialistas comerciales, técnicos o de posventa.";
 
@@ -108,7 +110,8 @@
         </div>
       </div>
       <p class="ipe3-alma__note" id="ipe3-alma-note">
-        ALMA puede equivocarse. Para cotizaciones, confirmaciones o atención personal, contacta al equipo IPE3.
+        ALMA puede equivocarse. Para cotizaciones, confirmaciones o atención personal,
+        <a href="https://wa.me/${whatsappNumber}" target="_blank" rel="noopener noreferrer">contacta al equipo IPE3</a>.
       </p>
     </section>
     <button class="ipe3-alma__launcher" type="button"
@@ -144,8 +147,6 @@
     });
   }
 
-  const apiEndpoint = "https://script.google.com/macros/s/AKfycbysdWCW_xUoOypezEPFtpv6oSwozlWWHu5hqlwTK1aTMMrgHTdSy-FmoNQeBwURv6sJbw/exec";
-  const whatsappNumber = "593984016027";
   const panel = widget.querySelector(".ipe3-alma__panel");
   const launcher = widget.querySelector(".ipe3-alma__launcher");
   const closeButton = widget.querySelector(".ipe3-alma__close");
@@ -169,6 +170,15 @@
   }
 
   let chatLog = [];
+  let lastAgentId = "";
+  let handoffShown = false;
+
+  const normalizeSuggestion = (value) =>
+    String(value || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .trim();
 
   const persistChat = () => {
     try {
@@ -333,12 +343,31 @@
     setThinking(busy);
   };
 
+  const usedSuggestions = () => {
+    const asked = chatLog
+      .filter((item) => item.role === "user")
+      .map((item) => normalizeSuggestion(item.content));
+    return new Set(asked);
+  };
+
   const updateSuggestions = (suggestions) => {
-    if (!suggestions || !suggestions.length) return;
     const container = widget.querySelector(".ipe3-alma__suggestions");
     if (!container) return;
+
+    const asked = usedSuggestions();
+    const fresh = (suggestions || []).filter(
+      (suggestion) => suggestion && !asked.has(normalizeSuggestion(suggestion))
+    );
+
     container.innerHTML = "";
-    suggestions.forEach((suggestion) => {
+
+    if (!fresh.length) {
+      container.hidden = true;
+      return;
+    }
+
+    container.hidden = false;
+    fresh.forEach((suggestion) => {
       const button = document.createElement("button");
       button.type = "button";
       button.setAttribute("data-alma-message", suggestion);
@@ -378,6 +407,7 @@
           type: "alma",
           sessionId: sessionId,
           message: text,
+          agent: lastAgentId,
           history: getHistory(),
         }),
       });
@@ -393,8 +423,12 @@
 
       agentStatus.textContent = result.agentName || "Especialista IPE3 · IA";
       onlineStatus.textContent = "En línea";
+      lastAgentId = result.agent || lastAgentId;
       addMessage(result.reply, "assistant", result.agentName);
-      if (result.handoff) addContactLink(text);
+      if (result.handoff && !handoffShown) {
+        addContactLink(text);
+        handoffShown = true;
+      }
       if (result.suggestions) updateSuggestions(result.suggestions);
     } catch (error) {
       const timedOut = error && (error.name === "AbortError" || error.name === "TimeoutError");
@@ -495,6 +529,8 @@
 
   resetButton.addEventListener("click", () => {
     chatLog = [];
+    lastAgentId = "";
+    handoffShown = false;
     messageList.innerHTML = "";
     persistChat();
     addMessage(WELCOME_MESSAGE, "assistant");

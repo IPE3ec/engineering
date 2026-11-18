@@ -817,6 +817,10 @@ header.ipe3-alma__header {
   transition: background 180ms ease, border-color 180ms ease, transform 180ms ease;
 }
 
+.ipe3-alma__suggestions[hidden] {
+  display: none;
+}
+
 .ipe3-alma__suggestions button:hover {
   transform: translateY(-1px);
   border-color: rgba(196, 181, 253, 0.6);
@@ -888,6 +892,16 @@ header.ipe3-alma__header {
   font-size: 10px;
   line-height: 1.45;
   text-align: center;
+}
+
+.ipe3-alma__note a {
+  color: #d8ccff;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.ipe3-alma__note a:hover {
+  color: #fff;
 }
 
 .ipe3-alma__consent {
