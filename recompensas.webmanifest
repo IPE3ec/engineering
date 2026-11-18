@@ -1,0 +1,27 @@
+{
+  "id": "./recompensas.html",
+  "name": "Recompensas IPE3 Engineering",
+  "short_name": "IPE3 Puntos",
+  "description": "Consulta y canjea tus puntos de servicio IPE3.",
+  "lang": "es-EC",
+  "start_url": "./recompensas.html?source=installed",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0a0c10",
+  "theme_color": "#0a0c10",
+  "icons": [
+    {
+      "src": "./static/pwa/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./static/pwa/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

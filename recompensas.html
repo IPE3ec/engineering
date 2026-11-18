@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a0c10">
+  <meta name="description" content="Acumula puntos IPE3 por servicios pagados y canjéalos por mantenimiento preventivo.">
+  <title>Recompensas | IPE3 Engineering</title>
+  <link rel="canonical" href="https://ipe3ec.github.io/engineering/recompensas.html">
+  <link rel="stylesheet" href="./static/css/ipe3-theme.css?v=nav-20261117">
+  <link rel="stylesheet" href="./static/css/recompensas.css?v=1">
+  <link rel="manifest" href="./recompensas.webmanifest">
+  <link rel="icon" href="./static/icons/favicon.ico">
+  <link rel="apple-touch-icon" href="./static/pwa/icon-192.png">
+  <script src="./static/js/ipe3-header-stars.js?v=8ea5635" defer></script>
+  <script src="./static/js/rewards/pwa.js?v=1" defer></script>
+  <script src="./static/js/rewards/firebase-config.js"></script>
+  <script type="module" src="./static/js/rewards/portal.js"></script>
+</head>
+<body class="rewards-page">
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+  <header class="ipe3-header">
+    <div class="ipe3-header-stars" id="header-stars" aria-hidden="true"></div>
+    <div class="ipe3-header-inner">
+      <a class="ipe3-brand" href="./index.html" aria-label="IPE3 Engineering, inicio">
+        <img class="ipe3-brand-logo" src="./static/img/ipe3-logo.png" alt="Logo IPE3 Engineering" width="72" height="72">
+        <span class="ipe3-brand-copy">
+          <strong class="ipe3-brand-name">IPE3® <span>Engineering</span></strong>
+          <small class="ipe3-brand-tagline">BY CORPORACIÓN 360</small>
+        </span>
+      </a>
+      <nav class="ipe3-nav" aria-label="Navegación principal">
+        <a href="./index.html">Inicio</a>
+        <a href="./servicios.html">Servicios</a>
+        <a href="./proyectos.html">Proyectos</a>
+        <a href="./nosotros.html">Nosotros</a>
+        <a href="./recompensas.html" aria-current="page">Recompensas</a>
+        <a href="./index.html#contacto">Contacto</a>
+      </nav>
+      <a class="ipe3-header-cta" href="https://wa.me/593984016027" target="_blank" rel="noopener">Cotizar</a>
+    </div>
+  </header>
+
+  <main id="contenido" class="rewards-main">
+    <section class="rewards-hero">
+      <p class="eyebrow">Programa de clientes IPE3</p>
+      <h1>Tu confianza suma puntos</h1>
+      <p>Por cada USD 10 pagados en un proyecto contratado después de registrarte, ganas 1 punto.</p>
+      <div class="reward-offer">
+        <span class="reward-offer-points">50 puntos</span>
+        <span class="reward-offer-equals" aria-hidden="true">=</span>
+        <span>Mantenimiento preventivo básico gratis para 1 equipo en Quito</span>
+      </div>
+      <p class="reward-terms">Incluye mano de obra. No incluye repuestos ni traslados fuera de Quito. El servicio se coordina y confirma con IPE3.</p>
+      <div class="install-row">
+        <button id="install-app" class="button button-outline" type="button" hidden>Instalar en Android</button>
+        <span id="install-hint" class="muted">Puedes instalar esta página como aplicación desde el menú de Chrome en Android.</span>
+      </div>
+      <p id="connection-status" class="connection-status" role="status">Conéctate a internet para iniciar sesión y consultar tus puntos.</p>
+    </section>
+
+    <section class="rewards-card auth-card" id="auth-panel" aria-labelledby="account-title">
+      <div class="card-heading">
+        <div>
+          <p class="eyebrow">Mi cuenta</p>
+          <h2 id="account-title">Ingresa o regístrate</h2>
+        </div>
+        <div class="mode-switch" role="group" aria-label="Tipo de cuenta">
+          <button id="show-login" class="mode-button active" type="button">Ingresar</button>
+          <button id="show-register" class="mode-button" type="button">Crear cuenta</button>
+        </div>
+      </div>
+
+      <form id="login-form" class="account-form">
+        <label>Correo electrónico
+          <input name="email" type="email" autocomplete="email" required>
+        </label>
+        <label>Contraseña
+          <input name="password" type="password" autocomplete="current-password" required>
+        </label>
+        <div class="form-actions">
+          <button class="button" type="submit">Ingresar</button>
+          <button id="reset-password" class="text-button" type="button">Olvidé mi contraseña</button>
+        </div>
+      </form>
+
+      <form id="register-form" class="account-form" hidden>
+        <label>Nombre
+          <input name="name" type="text" autocomplete="name" maxlength="120" required>
+        </label>
+        <label>Correo electrónico
+          <input name="email" type="email" autocomplete="email" required>
+        </label>
+        <label>Contraseña (mínimo 8 caracteres)
+          <input name="password" type="password" autocomplete="new-password" minlength="8" required>
+        </label>
+        <button class="button" type="submit">Crear cuenta</button>
+      </form>
+
+      <div class="divider"><span>o continúa con</span></div>
+      <button id="google-sign-in" class="button google-button" type="button">Continuar con Google</button>
+      <div class="verification-actions" id="verification-actions" hidden>
+        <button id="resend-verification" class="text-button" type="button">Reenviar correo de verificación</button>
+        <button id="check-verification" class="text-button" type="button">Ya verifiqué mi correo</button>
+      </div>
+      <p id="account-status" class="status-message" role="status" aria-live="polite">El registro se activará cuando IPE3 configure el servicio.</p>
+    </section>
+
+    <section id="consent-panel" class="rewards-card" aria-labelledby="consent-title" hidden>
+      <p class="eyebrow">Antes de continuar</p>
+      <h2 id="consent-title">Aviso de uso de datos</h2>
+      <p class="muted">Para administrar tu cuenta, puntos, contratos y canjes, IPE3 guardará tu nombre, correo, fecha de registro y movimientos en una hoja privada de Google administrada por IPE3. El personal autorizado verificará pagos y solicitudes. Tus contraseñas no se guardan en esa hoja.</p>
+      <p class="muted">Al aceptar, confirmas que leíste este aviso y autorizas ese uso de datos para el programa de recompensas. Para consultas o solicitudes sobre tus datos, escribe a ipe3ecuador@gmail.com.</p>
+      <label class="consent-row">
+        <input id="terms-consent" type="checkbox">
+        <span>Leí y acepto el aviso de uso de datos para administrar mis recompensas.</span>
+      </label>
+      <button id="accept-terms" class="button" type="button">Aceptar y continuar</button>
+      <button id="consent-sign-out" class="text-button" type="button">Cerrar sesión</button>
+      <p id="consent-status" class="status-message" role="status" aria-live="polite"></p>
+    </section>
+
+    <section id="member-panel" class="rewards-card member-card" aria-labelledby="member-title" hidden>
+      <div class="card-heading">
+        <div>
+          <p class="eyebrow">Cuenta de cliente</p>
+          <h2 id="member-title">Mis recompensas</h2>
+          <p id="member-email" class="muted"></p>
+        </div>
+        <button id="sign-out" class="text-button" type="button">Cerrar sesión</button>
+      </div>
+      <div class="points-grid">
+        <article class="points-tile">
+          <span>Disponibles</span>
+          <strong id="available-points">0</strong>
+          <small>puntos para usar</small>
+        </article>
+        <article class="points-tile">
+          <span>Acumulados</span>
+          <strong id="earned-points">0</strong>
+          <small>por pagos confirmados</small>
+        </article>
+        <article class="points-tile">
+          <span>Canjeados</span>
+          <strong id="redeemed-points">0</strong>
+          <small>puntos usados</small>
+        </article>
+      </div>
+      <div class="redeem-box">
+        <div>
+          <h3>Mantenimiento preventivo básico</h3>
+          <p>50 puntos · 1 equipo en Quito · sin repuestos ni traslados fuera de Quito</p>
+        </div>
+        <button id="request-redemption" class="button" type="button" disabled>Solicitar canje</button>
+      </div>
+      <p id="member-status" class="status-message" role="status" aria-live="polite"></p>
+      <div class="history-section">
+        <h3>Actividad de puntos</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Fecha</th><th>Movimiento</th><th>Puntos</th><th>Estado</th></tr></thead>
+            <tbody id="history-rows"></tbody>
+          </table>
+        </div>
+        <p id="empty-history" class="muted">Tus puntos aparecerán después de que IPE3 confirme un pago.</p>
+      </div>
+    </section>
+
+    <section id="admin-panel" class="rewards-card admin-card" aria-labelledby="admin-title" hidden>
+      <div class="card-heading">
+        <div>
+          <p class="eyebrow">Gestión interna</p>
+          <h2 id="admin-title">Administrar recompensas</h2>
+        </div>
+        <button id="refresh-admin" class="text-button" type="button">Actualizar</button>
+      </div>
+      <form id="award-form" class="account-form admin-form">
+        <h3>Acreditar contrato pagado</h3>
+        <label>Cliente registrado
+          <select name="uid" id="contract-member" required></select>
+        </label>
+        <label>Código único de contrato o factura
+          <input name="contractCode" type="text" maxlength="60" pattern="[A-Za-z0-9][A-Za-z0-9._/-]{0,59}" required>
+        </label>
+        <label>Fecha y hora del contrato
+          <input name="contractDate" id="contract-date" type="datetime-local" required>
+        </label>
+        <label>Monto total pagado del contrato (USD)
+          <input name="paidAmount" type="number" min="10" step="0.01" required>
+        </label>
+        <p class="muted">Registra el total de abonos una sola vez, después de confirmar el pago. Se otorga 1 punto por cada USD 10 completos. Cada código de contrato se puede usar una sola vez.</p>
+        <button class="button" type="submit">Confirmar pago y acreditar puntos</button>
+      </form>
+      <div class="history-section">
+        <h3>Solicitudes de canje pendientes</h3>
+        <div id="pending-redemptions" class="admin-list"></div>
+        <p id="empty-redemptions" class="muted">No hay canjes pendientes.</p>
+      </div>
+      <p id="admin-status" class="status-message" role="status" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <footer class="rewards-footer">
+    <p>Los puntos se acreditan solo por pagos confirmados de proyectos contratados después del registro. Un punto por cada USD 10 completos.<br>© 2026 IPE3 Engineering. Todos los derechos reservados. Fundada en enero de 2013.</p>
+    <a href="./index.html">Volver a IPE3 Engineering</a>
+  </footer>
+</body>
+</html>

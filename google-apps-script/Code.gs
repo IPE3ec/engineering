@@ -1,5 +1,11 @@
 const SPREADSHEET_NAME = "IPE3 - Cotizaciones";
 const DRIVE_FOLDER_NAME = "IPE3_Cotizaciones";
+const REWARDS_MEMBERS_SHEET = "Miembros";
+const REWARDS_LEDGER_SHEET = "Movimientos";
+const REWARDS_REDEMPTION_COST = 50;
+const REWARDS_TERMS_VERSION = "ipe3-rewards-terms-v1";
+const REWARDS_MAINTENANCE_DESCRIPTION =
+  "Mantenimiento preventivo básico de 1 equipo en Quito; mano de obra incluida, repuestos y traslados fuera de Quito no incluidos.";
 
 function doGet() {
   return HtmlService.createTemplateFromFile("Admin")
@@ -11,44 +17,447 @@ function doGet() {
 function doPost(request) {
   try {
     const data = JSON.parse(request.postData.contents);
-    const required = ["nombre", "telefono", "servicio", "categoria", "cantidad", "descripcion"];
-    for (const field of required) {
-      if (!data[field]) throw new Error("Faltan datos obligatorios.");
+    if (data.type === "rewards") {
+      return jsonOutput_(handleRewardsRequest_(data));
     }
 
-    const quoteId = "COT-" + Utilities.formatDate(new Date(), "America/Guayaquil", "yyyyMMdd-HHmmss") +
-      "-" + Math.floor(Math.random() * 900 + 100);
-    const files = saveAttachments_(quoteId, data.attachments || []);
-    const sheet = getQuoteSheet_();
-    sheet.appendRow([
-      quoteId,
-      new Date(),
-      data.nombre,
-      data.telefono,
-      data.email || "",
-      data.institucion || "",
-      data.servicio,
-      data.categoria,
-      data.modelo || "",
-      Number(data.cantidad) || 1,
-      data.ciudad || "",
-      data.urgencia || "Normal",
-      data.descripcion,
-      "Nueva",
-      files.map((file) => file.url).join("\n"),
-      files.map((file) => file.name).join(", "),
-    ]);
-
-    return ContentService.createTextOutput(JSON.stringify({
-      success: true,
-      quoteId: quoteId,
-    })).setMimeType(ContentService.MimeType.JSON);
+    return jsonOutput_(saveQuoteRequest_(data));
   } catch (error) {
-    return ContentService.createTextOutput(JSON.stringify({
+    return jsonOutput_({
       success: false,
-      message: error.message,
-    })).setMimeType(ContentService.MimeType.JSON);
+      message: error.message || "No se pudo procesar la solicitud.",
+    });
   }
+}
+
+function saveQuoteRequest_(data) {
+  const required = ["nombre", "telefono", "servicio", "categoria", "cantidad", "descripcion"];
+  for (const field of required) {
+    if (!data[field]) throw new Error("Faltan datos obligatorios.");
+  }
+
+  const quoteId = "COT-" + Utilities.formatDate(new Date(), "America/Guayaquil", "yyyyMMdd-HHmmss") +
+    "-" + Math.floor(Math.random() * 900 + 100);
+  const files = saveAttachments_(quoteId, data.attachments || []);
+  const sheet = getQuoteSheet_();
+  sheet.appendRow([
+    quoteId,
+    new Date(),
+    data.nombre,
+    data.telefono,
+    data.email || "",
+    data.institucion || "",
+    data.servicio,
+    data.categoria,
+    data.modelo || "",
+    Number(data.cantidad) || 1,
+    data.ciudad || "",
+    data.urgencia || "Normal",
+    data.descripcion,
+    "Nueva",
+    files.map((file) => file.url).join("\n"),
+    files.map((file) => file.name).join(", "),
+  ]);
+
+  return { success: true, quoteId: quoteId };
+}
+
+function jsonOutput_(data) {
+  return ContentService.createTextOutput(JSON.stringify(data))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function handleRewardsRequest_(data) {
+  const identity = verifyRewardsIdentity_(data.idToken);
+  const action = data.action;
+
+  if (action === "dashboard") return getRewardsDashboard_(identity);
+  if (action === "acceptTerms") return acceptRewardsTerms_(identity, data);
+  if (action === "requestRedemption") return requestRewardsRedemption_(identity);
+  if (action === "adminDashboard") return getRewardsAdminDashboard_(identity);
+  if (action === "awardContract") return awardRewardsContract_(identity, data);
+  if (action === "resolveRedemption") return resolveRewardsRedemption_(identity, data);
+
+  throw new Error("Acción de recompensas no válida.");
+}
+
+function verifyRewardsIdentity_(idToken) {
+  const apiKey = PropertiesService.getScriptProperties().getProperty("FIREBASE_WEB_API_KEY");
+  if (!apiKey) throw new Error("Falta configurar FIREBASE_WEB_API_KEY en Apps Script.");
+  if (typeof idToken !== "string" || !idToken) throw new Error("Inicia sesión para continuar.");
+
+  const response = UrlFetchApp.fetch(
+    "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=" + encodeURIComponent(apiKey),
+    {
+      method: "post",
+      contentType: "application/json",
+      payload: JSON.stringify({ idToken: idToken }),
+      muteHttpExceptions: true,
+    }
+  );
+  if (response.getResponseCode() !== 200) {
+    throw new Error("La sesión expiró o no es válida. Inicia sesión nuevamente.");
+  }
+
+  const result = JSON.parse(response.getContentText());
+  const user = result.users && result.users[0];
+  if (!user || !user.localId || !user.email || user.emailVerified !== true) {
+    throw new Error("Verifica tu correo antes de usar las recompensas.");
+  }
+  if (user.disabled === true) throw new Error("La cuenta está desactivada.");
+
+  const createdAt = new Date(Number(user.createdAt));
+  if (isNaN(createdAt.getTime())) throw new Error("No se pudo verificar la fecha de registro.");
+  const lastSignInAt = user.lastLoginAt ? new Date(Number(user.lastLoginAt)) : new Date();
+
+  return {
+    uid: user.localId,
+    email: user.email.trim().toLowerCase(),
+    name: user.displayName || "",
+    createdAt: createdAt,
+    lastSignInAt: isNaN(lastSignInAt.getTime()) ? new Date() : lastSignInAt,
+  };
+}
+
+function isRewardsAdmin_(identity) {
+  const configured = PropertiesService.getScriptProperties().getProperty("REWARD_ADMIN_EMAILS");
+  if (!configured) return false;
+  return configured.split(",")
+    .map(function (email) { return email.trim().toLowerCase(); })
+    .indexOf(identity.email) >= 0;
+}
+
+function requireRewardsAdmin_(identity) {
+  if (!isRewardsAdmin_(identity)) throw new Error("No tienes permiso para administrar recompensas.");
+  const member = findRewardsMember_(identity.uid, getRewardsSheets_().members);
+  if (!member || member.termsVersion !== REWARDS_TERMS_VERSION) {
+    throw new Error("Acepta el aviso de datos desde tu cuenta antes de administrar recompensas.");
+  }
+}
+
+function getRewardsSheets_() {
+  const properties = PropertiesService.getScriptProperties();
+  let spreadsheetId = properties.getProperty("SPREADSHEET_ID");
+  if (!spreadsheetId) {
+    getQuoteSheet_();
+    spreadsheetId = properties.getProperty("SPREADSHEET_ID");
+  }
+  const spreadsheet = SpreadsheetApp.openById(spreadsheetId);
+
+  let members = spreadsheet.getSheetByName(REWARDS_MEMBERS_SHEET);
+  if (!members) members = spreadsheet.insertSheet(REWARDS_MEMBERS_SHEET);
+  const memberHeaders = [
+    "UID", "Correo", "Nombre", "Fecha de registro", "Último acceso",
+    "Consentimiento", "Versión de términos",
+  ];
+  if (members.getLastRow() === 0) {
+    members.appendRow(memberHeaders);
+  } else {
+    const currentColumns = members.getLastColumn();
+    if (currentColumns < memberHeaders.length) {
+      members.insertColumnsAfter(currentColumns, memberHeaders.length - currentColumns);
+    }
+    members.getRange(1, 1, 1, memberHeaders.length).setValues([memberHeaders]);
+  }
+  members.setFrozenRows(1);
+
+  let ledger = spreadsheet.getSheetByName(REWARDS_LEDGER_SHEET);
+  if (!ledger) ledger = spreadsheet.insertSheet(REWARDS_LEDGER_SHEET);
+  if (ledger.getLastRow() === 0) {
+    ledger.appendRow([
+      "ID", "Fecha", "UID", "Correo", "Tipo", "Puntos", "Monto USD",
+      "Contrato", "Fecha de servicio", "Estado", "Aprobado por", "Detalle",
+    ]);
+  }
+  ledger.setFrozenRows(1);
+  return { members: members, ledger: ledger };
+}
+
+function withRewardsLock_(callback) {
+  const lock = LockService.getScriptLock();
+  lock.waitLock(30000);
+  try {
+    return callback();
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function upsertRewardsMember_(identity, sheets) {
+  const values = sheets.members.getDataRange().getValues();
+  for (let index = 1; index < values.length; index += 1) {
+    if (values[index][0] === identity.uid) {
+      sheets.members.getRange(index + 1, 2, 1, 4).setValues([[
+        safeSheetText_(identity.email, 254),
+        safeSheetText_(identity.name, 120),
+        values[index][3] || identity.createdAt,
+        identity.lastSignInAt,
+      ]]);
+      return index + 1;
+    }
+  }
+
+  sheets.members.appendRow([
+    identity.uid,
+    safeSheetText_(identity.email, 254),
+    safeSheetText_(identity.name, 120),
+    identity.createdAt,
+    identity.lastSignInAt,
+    "",
+    "",
+  ]);
+  return sheets.members.getLastRow();
+}
+
+function safeSheetText_(value, maxLength) {
+  const text = String(value || "").trim().slice(0, maxLength);
+  return /^[=+\-@]/.test(text) ? "'" + text : text;
+}
+
+function calculateRewardsPoints_(amountCents) {
+  if (!Number.isFinite(amountCents) || amountCents < 1000) {
+    throw new Error("El monto pagado debe ser de al menos USD 10.");
+  }
+  return Math.floor(amountCents / 1000);
+}
+
+function findRewardsMember_(uid, membersSheet) {
+  const values = membersSheet.getDataRange().getValues();
+  for (let index = 1; index < values.length; index += 1) {
+    if (values[index][0] === uid) {
+      return {
+        row: index + 1,
+        uid: values[index][0],
+        email: values[index][1],
+        name: values[index][2],
+        createdAt: values[index][3] instanceof Date ? values[index][3] : new Date(values[index][3]),
+        termsVersion: values[index][6] || "",
+      };
+    }
+  }
+  return null;
+}
+
+function getRewardsSummary_(uid, ledgerSheet) {
+  const values = ledgerSheet.getDataRange().getValues();
+  let earned = 0;
+  let redeemed = 0;
+  let reserved = 0;
+  const history = [];
+
+  for (let index = 1; index < values.length; index += 1) {
+    const row = values[index];
+    if (row[2] !== uid) continue;
+
+    if (row[4] === "ACUMULACION" && row[9] === "APROBADO") earned += Number(row[5]) || 0;
+    if (row[4] === "CANJE" && row[9] === "APROBADO") redeemed += Number(row[5]) || 0;
+    if (row[4] === "CANJE" && row[9] === "PENDIENTE") reserved += Number(row[5]) || 0;
+
+    history.push({
+      id: row[0],
+      date: row[1] ? Utilities.formatDate(new Date(row[1]), "America/Guayaquil", "yyyy-MM-dd HH:mm") : "",
+      type: row[4],
+      points: Number(row[5]) || 0,
+      amount: Number(row[6]) || 0,
+      contract: row[7] || "",
+      status: row[9],
+      detail: row[11] || "",
+    });
+  }
+
+  history.reverse();
+  return {
+    pointsBalance: earned - redeemed,
+    availablePoints: earned - redeemed - reserved,
+    totalEarned: earned,
+    totalRedeemed: redeemed,
+    pendingPoints: reserved,
+    history: history.slice(0, 100),
+  };
+}
+
+function getRewardsDashboard_(identity) {
+  const result = withRewardsLock_(function () {
+    const sheets = getRewardsSheets_();
+    const member = findRewardsMember_(identity.uid, sheets.members);
+    const consentRequired = !member || member.termsVersion !== REWARDS_TERMS_VERSION;
+    if (!consentRequired) {
+      upsertRewardsMember_(identity, sheets);
+    }
+    return {
+      success: true,
+      profile: { email: identity.email, name: identity.name },
+      isAdmin: isRewardsAdmin_(identity),
+      consentRequired: consentRequired,
+      rewards: consentRequired ? null : getRewardsSummary_(identity.uid, sheets.ledger),
+    };
+  });
+  return result;
+}
+
+function acceptRewardsTerms_(identity, data) {
+  if (data.accepted !== true) throw new Error("Debes aceptar el aviso de datos para continuar.");
+  return withRewardsLock_(function () {
+    const sheets = getRewardsSheets_();
+    const row = upsertRewardsMember_(identity, sheets);
+    sheets.members.getRange(row, 6, 1, 2).setValues([[new Date(), REWARDS_TERMS_VERSION]]);
+    return { success: true };
+  });
+}
+
+function requestRewardsRedemption_(identity) {
+  return withRewardsLock_(function () {
+    const sheets = getRewardsSheets_();
+    const member = findRewardsMember_(identity.uid, sheets.members);
+    if (!member || member.termsVersion !== REWARDS_TERMS_VERSION) {
+      throw new Error("Acepta el aviso de datos antes de solicitar un canje.");
+    }
+    upsertRewardsMember_(identity, sheets);
+    const summary = getRewardsSummary_(identity.uid, sheets.ledger);
+    if (summary.availablePoints < REWARDS_REDEMPTION_COST) {
+      throw new Error("Necesitas 50 puntos disponibles para solicitar el mantenimiento.");
+    }
+
+    const redemptionId = "CAN-" + Utilities.getUuid();
+    sheets.ledger.appendRow([
+      redemptionId,
+      new Date(),
+      identity.uid,
+      safeSheetText_(identity.email, 254),
+      "CANJE",
+      REWARDS_REDEMPTION_COST,
+      0,
+      "",
+      "",
+      "PENDIENTE",
+      "",
+      REWARDS_MAINTENANCE_DESCRIPTION,
+    ]);
+    return {
+      success: true,
+      redemptionId: redemptionId,
+      message: "Solicitud recibida. IPE3 confirmará la disponibilidad para coordinar el mantenimiento.",
+    };
+  });
+}
+
+function getRewardsAdminDashboard_(identity) {
+  requireRewardsAdmin_(identity);
+
+  const sheets = getRewardsSheets_();
+  const memberRows = sheets.members.getDataRange().getValues();
+  const members = [];
+  for (let index = 1; index < memberRows.length; index += 1) {
+    const row = memberRows[index];
+    if (!row[0] || row[6] !== REWARDS_TERMS_VERSION) continue;
+    const summary = getRewardsSummary_(row[0], sheets.ledger);
+    members.push({
+      uid: row[0],
+      email: row[1],
+      name: row[2],
+      registeredAt: row[3] ? new Date(row[3]).toISOString() : "",
+      pointsBalance: summary.pointsBalance,
+      availablePoints: summary.availablePoints,
+    });
+  }
+
+  const ledgerRows = sheets.ledger.getDataRange().getValues();
+  const pendingRedemptions = [];
+  for (let index = 1; index < ledgerRows.length; index += 1) {
+    const row = ledgerRows[index];
+    if (row[4] !== "CANJE" || row[9] !== "PENDIENTE") continue;
+    pendingRedemptions.push({
+      id: row[0],
+      date: row[1] ? Utilities.formatDate(new Date(row[1]), "America/Guayaquil", "yyyy-MM-dd HH:mm") : "",
+      uid: row[2],
+      email: row[3],
+      points: Number(row[5]) || 0,
+      detail: row[11] || "",
+    });
+  }
+  pendingRedemptions.reverse();
+  return { success: true, members: members, pendingRedemptions: pendingRedemptions };
+}
+
+function awardRewardsContract_(identity, data) {
+  requireRewardsAdmin_(identity);
+
+  return withRewardsLock_(function () {
+    const sheets = getRewardsSheets_();
+    const member = findRewardsMember_(String(data.uid || ""), sheets.members);
+    if (!member) throw new Error("Selecciona un cliente registrado.");
+    if (member.termsVersion !== REWARDS_TERMS_VERSION) {
+      throw new Error("El cliente debe aceptar el aviso de datos antes de acumular puntos.");
+    }
+
+    const contractCode = String(data.contractCode || "").trim();
+    if (!/^[A-Za-z0-9][A-Za-z0-9._/-]{0,59}$/.test(contractCode)) {
+      throw new Error("Ingresa un código de contrato válido (máximo 60 caracteres).");
+    }
+
+    const contractDate = new Date(Number(data.contractTimestamp));
+    if (isNaN(contractDate.getTime()) || contractDate.getTime() <= member.createdAt.getTime()) {
+      throw new Error("La fecha del contrato debe ser posterior al registro del cliente.");
+    }
+    if (contractDate.getTime() > Date.now()) throw new Error("La fecha del contrato no puede estar en el futuro.");
+
+    const amountCents = Math.round(Number(data.paidAmount) * 100);
+    const points = calculateRewardsPoints_(amountCents);
+
+    const existing = sheets.ledger.getDataRange().getValues();
+    const normalizedCode = contractCode.toLowerCase();
+    for (let index = 1; index < existing.length; index += 1) {
+      if (String(existing[index][7] || "").trim().toLowerCase() === normalizedCode) {
+        throw new Error("Ese contrato ya fue registrado.");
+      }
+    }
+
+    sheets.ledger.appendRow([
+      "ACU-" + Utilities.getUuid(),
+      new Date(),
+      member.uid,
+      safeSheetText_(member.email, 254),
+      "ACUMULACION",
+      points,
+      amountCents / 100,
+      safeSheetText_(contractCode, 60),
+      contractDate,
+      "APROBADO",
+      safeSheetText_(identity.email, 254),
+      "Pago confirmado por administrador. 1 punto por cada USD 10 pagados.",
+    ]);
+    return { success: true, points: points };
+  });
+}
+
+function resolveRewardsRedemption_(identity, data) {
+  requireRewardsAdmin_(identity);
+
+  return withRewardsLock_(function () {
+    const sheets = getRewardsSheets_();
+    const redemptionId = String(data.redemptionId || "");
+    const decision = String(data.decision || "");
+    if (decision !== "APROBADO" && decision !== "RECHAZADO") {
+      throw new Error("La decisión de canje no es válida.");
+    }
+
+    const values = sheets.ledger.getDataRange().getValues();
+    for (let index = 1; index < values.length; index += 1) {
+      const row = values[index];
+      if (row[0] !== redemptionId || row[4] !== "CANJE") continue;
+      if (row[9] !== "PENDIENTE") throw new Error("Esta solicitud ya fue atendida.");
+      if (decision === "APROBADO" &&
+          getRewardsSummary_(row[2], sheets.ledger).pointsBalance < Number(row[5])) {
+        throw new Error("El cliente ya no tiene puntos suficientes para este canje.");
+      }
+      sheets.ledger.getRange(index + 1, 10, 1, 2).setValues([[
+        decision,
+        safeSheetText_(identity.email, 254),
+      ]]);
+      return { success: true };
+    }
+    throw new Error("No se encontró la solicitud de canje.");
+  });
 }
 
 function getQuoteSheet_() {
