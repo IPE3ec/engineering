@@ -131,7 +131,7 @@
     container.appendChild(core);
   }
 
-  const apiEndpoint = "https://script.google.com/macros/s/AKfycbxig1xTGc2x7qeFUjlTzYZPBVt-5Whc-orDBqAc31nTmGFjkaGIMHMBAql59EUhi6lE8g/exec";
+  const apiEndpoint = "https://script.google.com/macros/s/AKfycbxZLPj4yyRaVFSUwK5vIOGACAr6xxIR-YGoBUCA-FxGQIkxnbHjca7Zm0v2ArXvcRS5KA/exec";
   const whatsappNumber = "593984016027";
   const panel = widget.querySelector(".ipe3-alma__panel");
   const launcher = widget.querySelector(".ipe3-alma__launcher");
