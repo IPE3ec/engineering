@@ -18,7 +18,19 @@
 
 Si no defines `ADMIN_EMAILS`, solo podrá administrar el panel el propietario efectivo del proyecto.
 
-## 3. Publicar la API y el panel
+## 3. Configurar ALMA con Gemini
+
+ALMA usa tres perfiles especializados (comercial, técnico y posventa) atendidos por Gemini. No consulta inventario, CRM, citas ni cotizaciones existentes, y no confirma reservas. Las respuestas se generan en cada solicitud y no se guarda el historial del chat en IPE3.
+
+1. Crea una clave de Gemini en Google AI Studio.
+2. En **Configuración del proyecto > Propiedades del script**, añade:
+   - `GEMINI_API_KEY`: la clave de Gemini. Guárdala solo en las propiedades del script; nunca la incluyas en JavaScript, HTML ni GitHub.
+   - `ALMA_GEMINI_MODEL`: opcional. Si se omite, el backend usa `gemini-3.8-flash`.
+3. Antes de usarla en producción, revisa las condiciones de privacidad y uso de datos vigentes de Google Gemini. ALMA envía los mensajes y el contexto reciente a Gemini con `store: false`; no compartas con el chat datos sensibles.
+
+El backend limita cada sesión a 8 solicitudes por minuto y el conjunto del sitio a 60 por minuto. Son límites básicos para controlar uso accidental; no sustituyen medidas antiabuso para un servicio de alto tráfico.
+
+## 4. Publicar la API y el panel
 
 1. Pulsa **Implementar** > **Nuevas implementaciones**.
 2. Tipo: **Aplicación web**.
@@ -28,18 +40,21 @@ Si no defines `ADMIN_EMAILS`, solo podrá administrar el panel el propietario ef
 
 En esa misma URL se abrirá el panel administrativo.
 
-## 4. Conectar la página
+## 5. Conectar la página
 
-Reemplaza `const IPE3_QUOTE_ENDPOINT = "";` en `cotizador.js` por:
+Configura la misma URL `/exec` en estos dos lugares:
 
 ```js
+// cotizador.js
 const IPE3_QUOTE_ENDPOINT = "PEGAR_URL_EXEC_AQUI";
+
+// static/js/ipe3-header-stars.js
+const apiEndpoint = "PEGAR_URL_EXEC_AQUI";
 ```
 
-Las fotos y PDFs se guardarán dentro de `IPE3_Cotizaciones` en Google Drive.
-Los datos se registrarán en una hoja llamada `IPE3 - Cotizaciones`.
+La segunda URL conecta ALMA con Gemini; la clave permanece en las propiedades privadas de Apps Script. La página solicita consentimiento antes de enviar cada consulta. Las cotizaciones conservan el flujo existente: fotos y PDFs se guardan en `IPE3_Cotizaciones` de Drive y los datos en `IPE3 - Cotizaciones` de Sheets.
 
-## 5. Activar el programa de puntos y la PWA
+## 6. Activar el programa de puntos y la PWA
 
 La página de recompensas usa Firebase Authentication para las cuentas y este mismo proyecto de Apps Script para validar sesiones y guardar el libro de puntos en Google Sheets. No se guardan contraseñas en Sheets.
 

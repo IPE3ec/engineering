@@ -7,10 +7,66 @@
   --ipe3-muted: #adb9cc;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background: var(--ipe3-background);
   color: var(--ipe3-text);
   font-family: "Space Grotesk", Arial, sans-serif;
+  transition: background-color 420ms cubic-bezier(0.16, 1, 0.3, 1), color 420ms ease;
+}
+
+body.ipe3-alma-active {
+  --ipe3-cyan: #c4b5fd;
+  --ipe3-blue: #8b5cf6;
+  --ipe3-background: #140e20;
+  --ipe3-panel: #241935;
+  --ipe3-text: #f2eaff;
+  --ipe3-muted: #d1c5e8;
+}
+
+body::before {
+  position: fixed;
+  z-index: 90;
+  inset: 0;
+  background: #8650df;
+  content: "";
+  opacity: 0;
+  pointer-events: none;
+  mix-blend-mode: soft-light;
+  transition: opacity 420ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+body.ipe3-alma-active::before {
+  opacity: 0.3;
+}
+
+body.ipe3-alma-active .ipe3-header {
+  border-bottom-color: rgba(196, 181, 253, 0.28);
+  background: rgba(22, 14, 38, 0.98);
+}
+
+body.ipe3-alma-active .ipe3-nav {
+  border-color: rgba(196, 181, 253, 0.28);
+  background: linear-gradient(120deg, rgba(139, 92, 246, 0.17), rgba(15, 22, 33, 0.94) 42%);
+}
+
+body.ipe3-alma-active .ipe3-nav a:hover,
+body.ipe3-alma-active .ipe3-nav a:focus-visible {
+  border-color: rgba(196, 181, 253, 0.3);
+  background: rgba(139, 92, 246, 0.16);
+}
+
+body.ipe3-alma-active .ipe3-nav a[aria-current="page"] {
+  border-color: rgba(196, 181, 253, 0.38);
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.28), rgba(91, 33, 182, 0.2));
+}
+
+body.ipe3-alma-active .ipe3-nav a::after {
+  background: #c4b5fd;
+  box-shadow: 0 0 8px rgba(196, 181, 253, 0.8);
 }
 
 .ipe3-header {
@@ -306,5 +362,522 @@ body {
   .ipe3-nav a,
   .ipe3-nav a::after {
     transition: none;
+  }
+}
+
+.ipe3-reveal {
+  opacity: 0;
+  transform: translate3d(0, 24px, 0) scale(0.99);
+  transition:
+    opacity 760ms cubic-bezier(0.16, 1, 0.3, 1) var(--ipe3-reveal-delay, 0ms),
+    transform 760ms cubic-bezier(0.16, 1, 0.3, 1) var(--ipe3-reveal-delay, 0ms);
+}
+
+.ipe3-reveal.ipe3-reveal--visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+.ipe3-alma {
+  --alma-purple: #a78bfa;
+  --alma-violet: #7c3aed;
+  position: fixed;
+  right: 22px;
+  bottom: 96px;
+  z-index: 9999;
+  color: #f7f4ff;
+  font-family: "Space Grotesk", Arial, sans-serif;
+}
+
+.ipe3-alma__launcher {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-height: 64px;
+  padding: 8px 17px 8px 9px;
+  border: 1px solid rgba(196, 181, 253, 0.42);
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(33, 25, 55, 0.96), rgba(17, 18, 30, 0.96));
+  box-shadow:
+    0 12px 36px rgba(0, 0, 0, 0.42),
+    0 0 28px rgba(139, 92, 246, 0.2),
+    inset 0 1px rgba(255, 255, 255, 0.12);
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+  transition:
+    transform 280ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 280ms ease,
+    box-shadow 280ms ease;
+}
+
+.ipe3-alma__launcher:hover {
+  transform: translateY(-3px) scale(1.015);
+  border-color: rgba(221, 214, 254, 0.8);
+  box-shadow:
+    0 16px 42px rgba(0, 0, 0, 0.48),
+    0 0 34px rgba(139, 92, 246, 0.34),
+    inset 0 1px rgba(255, 255, 255, 0.16);
+}
+
+.ipe3-alma__launcher-orb,
+.ipe3-alma__avatar {
+  position: relative;
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 30% 23%, #ede9fe, transparent 26%),
+    radial-gradient(circle at 68% 74%, #c4b5fd, transparent 34%),
+    linear-gradient(145deg, #a78bfa, #6d28d9 62%, #312e81);
+  box-shadow:
+    0 0 24px rgba(167, 139, 250, 0.5),
+    inset 0 1px rgba(255, 255, 255, 0.55);
+}
+
+.ipe3-alma__launcher-orb {
+  width: 46px;
+  height: 46px;
+  animation: ipe3-alma-breathe 4s ease-in-out infinite;
+}
+
+.ipe3-alma__launcher-orb::before,
+.ipe3-alma__avatar::before {
+  position: absolute;
+  inset: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.36);
+  border-radius: inherit;
+  content: "";
+}
+
+.ipe3-alma__launcher-orb svg,
+.ipe3-alma__avatar svg {
+  position: relative;
+  z-index: 1;
+  width: 22px;
+  filter: drop-shadow(0 1px 5px rgba(40, 20, 90, 0.8));
+}
+
+.ipe3-alma__mark {
+  fill: none;
+  stroke: #fff;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.5;
+}
+
+.ipe3-alma__orbit {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.72);
+  stroke-width: 0.8;
+}
+
+.ipe3-alma__node {
+  fill: #fff;
+  filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.9));
+}
+
+.ipe3-alma__launcher-label {
+  display: grid;
+  gap: 1px;
+}
+
+.ipe3-alma__launcher-label strong {
+  font-size: 15px;
+  letter-spacing: 0.16em;
+  line-height: 1.15;
+}
+
+.ipe3-alma__launcher-label small {
+  color: #d3c8f4;
+  font-size: 11px;
+  line-height: 1.2;
+}
+
+.ipe3-alma__panel {
+  position: absolute;
+  right: 0;
+  bottom: 78px;
+  display: flex;
+  width: min(390px, calc(100vw - 32px));
+  max-height: min(570px, calc(100dvh - 190px));
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid rgba(196, 181, 253, 0.32);
+  border-radius: 24px;
+  background:
+    radial-gradient(ellipse at 100% 0, rgba(139, 92, 246, 0.18), transparent 46%),
+    rgba(13, 14, 23, 0.97);
+  box-shadow:
+    0 28px 90px rgba(0, 0, 0, 0.58),
+    0 0 42px rgba(124, 58, 237, 0.16),
+    inset 0 1px rgba(255, 255, 255, 0.1);
+  color: #f7f4ff;
+  backdrop-filter: blur(24px);
+  animation: ipe3-alma-appear 360ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.ipe3-alma__panel[hidden] {
+  display: none;
+}
+
+header.ipe3-alma__header {
+  position: relative;
+  display: flex;
+  min-height: 76px;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(196, 181, 253, 0.14);
+  background: transparent;
+}
+
+.ipe3-alma__avatar {
+  width: 42px;
+  height: 42px;
+}
+
+.ipe3-alma__avatar svg {
+  width: 19px;
+}
+
+.ipe3-alma__identity {
+  display: grid;
+  gap: 3px;
+}
+
+.ipe3-alma__identity strong {
+  font-size: 14px;
+  letter-spacing: 0.15em;
+}
+
+.ipe3-alma__identity small {
+  color: #c4bbd8;
+  font-size: 11px;
+}
+
+.ipe3-alma__online {
+  margin-left: auto;
+  padding: 5px 9px;
+  border: 1px solid rgba(167, 139, 250, 0.2);
+  border-radius: 999px;
+  background: rgba(139, 92, 246, 0.11);
+  color: #d8ccff;
+  font-size: 10px;
+}
+
+.ipe3-alma__close {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.07);
+  color: #eee9ff;
+  font-size: 23px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 180ms ease, transform 180ms ease;
+}
+
+.ipe3-alma__close:hover {
+  transform: rotate(90deg);
+  background: rgba(167, 139, 250, 0.2);
+}
+
+.ipe3-alma__messages {
+  display: flex;
+  min-height: 130px;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  padding: 18px 16px 12px;
+  overscroll-behavior: contain;
+  scrollbar-color: rgba(167, 139, 250, 0.4) transparent;
+}
+
+.ipe3-alma__message {
+  max-width: 90%;
+  padding: 11px 13px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px 16px 16px 5px;
+  background: rgba(255, 255, 255, 0.055);
+  color: #e8e4f2;
+  font-size: 13px;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+.ipe3-alma__message--user {
+  align-self: flex-end;
+  border-color: rgba(167, 139, 250, 0.24);
+  border-radius: 16px 16px 5px 16px;
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.4), rgba(91, 33, 182, 0.28));
+  color: #fff;
+}
+
+.ipe3-alma__message-agent {
+  display: block;
+  margin-bottom: 4px;
+  color: #d2c3ff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.ipe3-alma__typing {
+  align-self: flex-start;
+  padding: 8px 11px;
+  color: #c4b5fd;
+  font-size: 11px;
+  animation: ipe3-alma-typing 1.4s ease-in-out infinite;
+}
+
+.ipe3-alma__contact {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  padding: 8px 12px;
+  border: 1px solid rgba(196, 181, 253, 0.3);
+  border-radius: 999px;
+  background: rgba(139, 92, 246, 0.14);
+  color: #e2d9ff;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 180ms ease, border-color 180ms ease;
+}
+
+.ipe3-alma__contact:hover {
+  border-color: rgba(196, 181, 253, 0.65);
+  background: rgba(139, 92, 246, 0.24);
+}
+
+.ipe3-alma__suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  padding: 0 16px 13px;
+}
+
+.ipe3-alma__suggestions button {
+  min-height: 32px;
+  padding: 6px 10px;
+  border: 1px solid rgba(196, 181, 253, 0.24);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.035);
+  color: #e2d9ff;
+  font: inherit;
+  font-size: 11px;
+  cursor: pointer;
+  transition: background 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+
+.ipe3-alma__suggestions button:hover {
+  transform: translateY(-1px);
+  border-color: rgba(196, 181, 253, 0.6);
+  background: rgba(139, 92, 246, 0.14);
+}
+
+.ipe3-alma__form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 13px;
+  padding: 6px 6px 6px 14px;
+  border: 1px solid rgba(196, 181, 253, 0.2);
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.24);
+}
+
+.ipe3-alma__form input {
+  width: 100%;
+  min-width: 0;
+  height: 39px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #fff;
+  font: inherit;
+  font-size: 13px;
+}
+
+.ipe3-alma__form input::placeholder {
+  color: #aaa1bd;
+}
+
+.ipe3-alma__form button {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 0;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #a78bfa, #7c3aed);
+  color: #fff;
+  cursor: pointer;
+  transition: transform 180ms ease, filter 180ms ease;
+}
+
+.ipe3-alma__form button:hover {
+  transform: scale(1.05);
+  filter: brightness(1.12);
+}
+
+.ipe3-alma__form button:disabled {
+  cursor: wait;
+  filter: saturate(0.55);
+  opacity: 0.75;
+}
+
+.ipe3-alma__form button svg {
+  width: 18px;
+  fill: currentColor;
+}
+
+.ipe3-alma__note {
+  margin: 10px 16px 13px;
+  color: #aaa1bd;
+  font-size: 10px;
+  line-height: 1.45;
+  text-align: center;
+}
+
+.ipe3-alma__consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  margin: 10px 17px 0;
+  color: #c6bdd7;
+  font-size: 10px;
+  line-height: 1.45;
+  cursor: pointer;
+}
+
+.ipe3-alma__consent input {
+  flex: 0 0 auto;
+  width: 14px;
+  height: 14px;
+  margin: 1px 0 0;
+  accent-color: #a78bfa;
+}
+
+.ipe3-alma__consent:focus-within {
+  color: #fff;
+}
+
+.ipe3-alma__close:focus-visible,
+.ipe3-alma__launcher:focus-visible,
+.ipe3-alma__suggestions button:focus-visible,
+.ipe3-alma__form button:focus-visible,
+.ipe3-alma__contact:focus-visible {
+  outline: 2px solid #ddd6fe;
+  outline-offset: 3px;
+}
+
+.ipe3-alma__visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@keyframes ipe3-alma-breathe {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 24px rgba(167, 139, 250, 0.5), inset 0 1px rgba(255, 255, 255, 0.55);
+  }
+  50% {
+    transform: scale(1.045);
+    box-shadow: 0 0 34px rgba(167, 139, 250, 0.68), inset 0 1px rgba(255, 255, 255, 0.64);
+  }
+}
+
+@keyframes ipe3-alma-appear {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes ipe3-alma-typing {
+  0%, 100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .ipe3-alma {
+    right: 12px;
+    bottom: 88px;
+  }
+
+  .ipe3-alma__panel {
+    position: fixed;
+    right: calc(100% - 100vw + 12px);
+    width: calc(100vw - 24px);
+    max-height: calc(100dvh - 176px);
+    bottom: 162px;
+    border-radius: 21px;
+  }
+
+  .ipe3-alma__launcher {
+    min-height: 58px;
+    gap: 9px;
+    padding-right: 14px;
+  }
+
+  .ipe3-alma__launcher-orb {
+    width: 42px;
+    height: 42px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .ipe3-reveal,
+  .ipe3-reveal.ipe3-reveal--visible {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  body,
+  body::before,
+  body.ipe3-alma-active::before {
+    animation: none;
+    transition: none;
+  }
+
+  .ipe3-alma *,
+  .ipe3-alma *::before,
+  .ipe3-alma *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
   }
 }

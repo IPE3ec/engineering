@@ -1,19 +1,284 @@
 (() => {
-  const container = document.getElementById("header-stars");
-  if (!container) return;
+  const reducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
+  const starsContainer = document.getElementById("header-stars");
 
-  const fragment = document.createDocumentFragment();
-  for (let index = 0; index < 45; index += 1) {
-    const star = document.createElement("span");
-    star.className = "ipe3-star";
-    star.style.setProperty("--left", `${Math.random() * 100}%`);
-    star.style.setProperty("--top", `${Math.random() * 100}%`);
-    star.style.setProperty("--size", `${1 + Math.random() * 2}px`);
-    star.style.setProperty("--duration", `${12 + Math.random() * 20}s`);
-    star.style.setProperty("--glow-duration", `${2 + Math.random() * 4}s`);
-    star.style.setProperty("--delay", `${-Math.random() * 30}s`);
-    fragment.appendChild(star);
+  if (starsContainer) {
+    const fragment = document.createDocumentFragment();
+    for (let index = 0; index < 45; index += 1) {
+      const star = document.createElement("span");
+      star.className = "ipe3-star";
+      star.style.setProperty("--left", `${Math.random() * 100}%`);
+      star.style.setProperty("--top", `${Math.random() * 100}%`);
+      star.style.setProperty("--size", `${1 + Math.random() * 2}px`);
+      star.style.setProperty("--duration", `${12 + Math.random() * 20}s`);
+      star.style.setProperty("--glow-duration", `${2 + Math.random() * 4}s`);
+      star.style.setProperty("--delay", `${-Math.random() * 30}s`);
+      fragment.appendChild(star);
+    }
+
+    starsContainer.appendChild(fragment);
   }
 
-  container.appendChild(fragment);
+  const revealTargets = document.querySelectorAll(
+    "main > section, main article, main .card, main .glass-card, main .glass-panel"
+  );
+  if (!reducedMotion && "IntersectionObserver" in window) {
+    const revealObserver = new IntersectionObserver(
+      (entries, observer) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("ipe3-reveal--visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { rootMargin: "0px 0px -8% 0px", threshold: 0.08 }
+    );
+
+    revealTargets.forEach((target, index) => {
+      target.style.setProperty("--ipe3-reveal-delay", `${(index % 4) * 55}ms`);
+      target.classList.add("ipe3-reveal");
+      revealObserver.observe(target);
+    });
+  }
+
+  if (document.querySelector(".ipe3-alma")) return;
+
+  const widget = document.createElement("div");
+  widget.className = "ipe3-alma";
+  widget.innerHTML = `
+    <section class="ipe3-alma__panel" id="ipe3-alma-panel" role="dialog"
+      aria-labelledby="ipe3-alma-title" aria-describedby="ipe3-alma-note" hidden>
+      <header class="ipe3-alma__header">
+        <span class="ipe3-alma__avatar" aria-hidden="true">
+          <svg viewBox="0 0 40 40" focusable="false">
+            <path class="ipe3-alma__mark" d="M12 29 20 9l8 20M15.2 21h9.6"/>
+            <ellipse class="ipe3-alma__orbit" cx="20" cy="20" rx="17" ry="8" transform="rotate(-32 20 20)"/>
+            <circle class="ipe3-alma__node" cx="33.6" cy="11.5" r="2.1"/>
+          </svg>
+        </span>
+        <span class="ipe3-alma__identity">
+          <strong id="ipe3-alma-title">ALMA</strong>
+          <small id="ipe3-alma-agent">Especialistas IPE3 · IA</small>
+        </span>
+        <span class="ipe3-alma__online" id="ipe3-alma-status">Vista previa</span>
+        <button class="ipe3-alma__close" type="button" aria-label="Cerrar ALMA">×</button>
+      </header>
+      <div class="ipe3-alma__messages" role="log" aria-live="polite" aria-relevant="additions">
+        <div class="ipe3-alma__message ipe3-alma__message--assistant">
+          <span>Hola, soy ALMA. Puedo orientarte y conectarte con especialistas comerciales, técnicos o de posventa.</span>
+        </div>
+      </div>
+      <div class="ipe3-alma__suggestions" aria-label="Preguntas sugeridas">
+        <button type="button" data-alma-message="¿Qué servicios ofrece IPE3?">Servicios</button>
+        <button type="button" data-alma-message="Quiero solicitar una cotización">Cotizar</button>
+        <button type="button" data-alma-message="Necesito soporte técnico">Soporte</button>
+      </div>
+      <form class="ipe3-alma__form">
+        <label class="ipe3-alma__visually-hidden" for="ipe3-alma-input">Escribe tu consulta</label>
+        <input id="ipe3-alma-input" name="message" type="text" maxlength="1200"
+          placeholder="Escribe tu consulta…" autocomplete="off" required>
+        <button type="submit" aria-label="Enviar mensaje">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M3.4 20.1 21 12 3.4 3.9 3 10.2l12.5 1.8L3 13.8l.4 6.3Z"/>
+          </svg>
+        </button>
+      </form>
+      <label class="ipe3-alma__consent">
+        <input type="checkbox" id="ipe3-alma-consent">
+        <span>Google Gemini procesa tu consulta. No envíes datos sensibles; IPE3 no guarda el historial.</span>
+      </label>
+      <p class="ipe3-alma__note" id="ipe3-alma-note">
+        ALMA puede equivocarse. Para cotizaciones, confirmaciones o atención personal, contacta al equipo IPE3.
+      </p>
+    </section>
+    <button class="ipe3-alma__launcher" type="button"
+      aria-controls="ipe3-alma-panel" aria-expanded="false" aria-label="Abrir asistente ALMA">
+      <span class="ipe3-alma__launcher-orb" aria-hidden="true">
+        <svg viewBox="0 0 40 40" focusable="false">
+          <path class="ipe3-alma__mark" d="M12 29 20 9l8 20M15.2 21h9.6"/>
+          <ellipse class="ipe3-alma__orbit" cx="20" cy="20" rx="17" ry="8" transform="rotate(-32 20 20)"/>
+          <circle class="ipe3-alma__node" cx="33.6" cy="11.5" r="2.1"/>
+        </svg>
+      </span>
+      <span class="ipe3-alma__launcher-label">
+        <strong>ALMA</strong>
+        <small>Asistente inteligente</small>
+      </span>
+    </button>
+  `;
+  document.body.appendChild(widget);
+
+  const apiEndpoint = "";
+  const whatsappNumber = "593984016027";
+  const panel = widget.querySelector(".ipe3-alma__panel");
+  const launcher = widget.querySelector(".ipe3-alma__launcher");
+  const closeButton = widget.querySelector(".ipe3-alma__close");
+  const messageList = widget.querySelector(".ipe3-alma__messages");
+  const input = widget.querySelector("#ipe3-alma-input");
+  const form = widget.querySelector(".ipe3-alma__form");
+  const consent = widget.querySelector("#ipe3-alma-consent");
+  const agentStatus = widget.querySelector("#ipe3-alma-agent");
+  const onlineStatus = widget.querySelector("#ipe3-alma-status");
+  onlineStatus.textContent = apiEndpoint ? "Gemini" : "Vista previa";
+  const sessionId =
+    window.crypto && typeof window.crypto.randomUUID === "function"
+      ? window.crypto.randomUUID()
+      : `alma-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+
+  const setOpen = (open) => {
+    panel.hidden = !open;
+    launcher.setAttribute("aria-expanded", String(open));
+    launcher.setAttribute(
+      "aria-label",
+      open ? "Cerrar asistente ALMA" : "Abrir asistente ALMA"
+    );
+    document.body.classList.toggle("ipe3-alma-active", open);
+    if (open) input.focus();
+    else launcher.focus();
+  };
+
+  const addMessage = (text, sender, agentName) => {
+    const message = document.createElement("div");
+    message.className = `ipe3-alma__message ipe3-alma__message--${sender}`;
+    if (agentName) {
+      const agent = document.createElement("small");
+      agent.className = "ipe3-alma__message-agent";
+      agent.textContent = agentName;
+      message.appendChild(agent);
+    }
+    const content = document.createElement("span");
+    content.textContent = text;
+    message.appendChild(content);
+    messageList.appendChild(message);
+    messageList.scrollTop = messageList.scrollHeight;
+  };
+
+  const addContactLink = (text) => {
+    const link = document.createElement("a");
+    link.className = "ipe3-alma__contact";
+    link.href = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
+      `Hola, quiero información sobre IPE3. ${text}`
+    )}`;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.textContent = "Continuar por WhatsApp";
+    messageList.appendChild(link);
+    messageList.scrollTop = messageList.scrollHeight;
+  };
+
+  const getHistory = () =>
+    Array.from(messageList.querySelectorAll(".ipe3-alma__message"))
+      .slice(-8)
+      .map((message) => ({
+        role: message.classList.contains("ipe3-alma__message--user")
+          ? "user"
+          : "assistant",
+        content: message.querySelector("span:last-child").textContent,
+      }));
+
+  const setBusy = (busy) => {
+    const sendButton = form.querySelector('button[type="submit"]');
+    input.disabled = busy;
+    sendButton.disabled = busy;
+    sendButton.setAttribute("aria-label", busy ? "ALMA está respondiendo" : "Enviar mensaje");
+  };
+
+  const requestReply = async (text, history) => {
+    if (!apiEndpoint) {
+      agentStatus.textContent = "Conexión pendiente";
+      onlineStatus.textContent = "Vista previa";
+      addMessage(
+        "La conexión de ALMA con Gemini aún debe configurarse. Puedes contactar directamente al equipo IPE3.",
+        "assistant"
+      );
+      addContactLink(text);
+      return;
+    }
+
+    const typing = document.createElement("div");
+    typing.className = "ipe3-alma__typing";
+    typing.setAttribute("role", "status");
+    typing.textContent = "ALMA está consultando a un especialista…";
+    messageList.appendChild(typing);
+    messageList.scrollTop = messageList.scrollHeight;
+    setBusy(true);
+
+    try {
+      const response = await fetch(apiEndpoint, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=UTF-8" },
+        body: JSON.stringify({
+          type: "alma",
+          sessionId: sessionId,
+          message: text,
+          history: history,
+        }),
+      });
+      let result;
+      try {
+        result = await response.json();
+      } catch {
+        throw new Error("El servidor de ALMA devolvió una respuesta inválida. Contacta al equipo IPE3.");
+      }
+      if (!response.ok || !result.success || !result.reply) {
+        throw new Error(result.message || "No se pudo obtener una respuesta de ALMA.");
+      }
+
+      agentStatus.textContent = result.agentName || "Especialista IPE3 · IA";
+      onlineStatus.textContent = "En línea";
+      addMessage(result.reply, "assistant", result.agentName);
+      if (result.handoff) addContactLink(text);
+    } catch (error) {
+      agentStatus.textContent = "Conexión interrumpida";
+      onlineStatus.textContent = "Sin conexión";
+      addMessage(
+        error instanceof Error
+          ? error.message
+          : "No se pudo conectar con ALMA. Inténtalo de nuevo o contacta al equipo.",
+        "assistant"
+      );
+      addContactLink(text);
+    } finally {
+      typing.remove();
+      setBusy(false);
+    }
+  };
+
+  const sendMessage = (text) => {
+    if (!text || input.disabled) return;
+    if (!consent.checked) {
+      addMessage(
+        "Antes de enviar tu consulta, confirma el aviso de privacidad que aparece debajo del campo.",
+        "assistant"
+      );
+      consent.focus();
+      return;
+    }
+
+    const history = getHistory();
+    addMessage(text, "user");
+    input.value = "";
+    requestReply(text, history);
+  };
+
+  launcher.addEventListener("click", () => {
+    setOpen(panel.hidden);
+  });
+  closeButton.addEventListener("click", () => setOpen(false));
+  widget.querySelectorAll("[data-alma-message]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const text = button.getAttribute("data-alma-message");
+      sendMessage(text);
+    });
+  });
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    sendMessage(input.value.trim());
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !panel.hidden) setOpen(false);
+  });
 })();
