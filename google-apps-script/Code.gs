@@ -6,7 +6,8 @@ const REWARDS_REDEMPTION_COST = 50;
 const REWARDS_TERMS_VERSION = "ipe3-rewards-terms-v1";
 const REWARDS_MAINTENANCE_DESCRIPTION =
   "Mantenimiento preventivo básico de 1 equipo en Quito; mano de obra incluida, repuestos y traslados fuera de Quito no incluidos.";
-const ALMA_DEFAULT_MODEL = "gemini-3.8-flash";
+const ALMA_DEFAULT_MODEL = "gemini-3.6-flash";
+const ALMA_MODEL_FALLBACKS = ["gemini-3.8-flash", "gemini-3.5-flash-lite", "gemini-3.1-flash-lite"];
 const ALMA_MAX_MESSAGE_LENGTH = 1200;
 const ALMA_MAX_HISTORY_MESSAGES = 8;
 const ALMA_SESSION_REQUEST_LIMIT = 8;
@@ -124,42 +125,68 @@ function handleAlmaRequest_(data) {
     .map((item) => (item.role === "assistant" ? "ALMA: " : "Cliente: ") + item.content)
     .concat("Cliente: " + message)
     .join("\n");
-  const model = PropertiesService.getScriptProperties().getProperty("ALMA_GEMINI_MODEL") ||
+  const configuredModel = PropertiesService.getScriptProperties().getProperty("ALMA_GEMINI_MODEL") ||
     ALMA_DEFAULT_MODEL;
-  const payload = {
-    model: model,
-    input: conversation,
-    system_instruction: almaSystemInstruction_(agent),
-    store: false,
-    generation_config: {
-      max_output_tokens: 450,
-    },
-  };
-  const response = UrlFetchApp.fetch(
-    "https://generativelanguage.googleapis.com/v1beta/interactions",
-    {
-      method: "post",
-      contentType: "application/json",
-      headers: {
-        "x-goog-api-key": apiKey,
-        "Api-Revision": "2026-05-20",
+  const models = [configuredModel]
+    .concat(ALMA_MODEL_FALLBACKS)
+    .filter(function (model, index, list) { return list.indexOf(model) === index; });
+
+  let lastStatus = 0;
+
+  for (let index = 0; index < models.length; index += 1) {
+    const payload = {
+      model: models[index],
+      input: conversation,
+      system_instruction: almaSystemInstruction_(agent),
+      store: false,
+      generation_config: {
+        max_output_tokens: 700,
       },
-      payload: JSON.stringify(payload),
-      muteHttpExceptions: true,
-    }
-  );
-  const status = response.getResponseCode();
-  if (status < 200 || status >= 300) {
-    throw new Error(
-      status === 429
-        ? "ALMA alcanzó temporalmente su límite de consultas. Inténtalo más tarde o contacta al equipo."
-        : "ALMA no pudo responder. Verifica la configuración de Gemini o contacta al equipo."
+    };
+    const response = UrlFetchApp.fetch(
+      "https://generativelanguage.googleapis.com/v1beta/interactions",
+      {
+        method: "post",
+        contentType: "application/json",
+        headers: {
+          "x-goog-api-key": apiKey,
+          "Api-Revision": "2026-05-20",
+        },
+        payload: JSON.stringify(payload),
+        muteHttpExceptions: true,
+      }
     );
+    const status = response.getResponseCode();
+    lastStatus = status;
+
+    if (status >= 200 && status < 300) {
+      const result = JSON.parse(response.getContentText());
+      const reply = extractAlmaReply_(result);
+
+      if (reply) {
+        return {
+          success: true,
+          agent: agent.id,
+          agentName: agent.name,
+          reply: reply.slice(0, 4000),
+          handoff: agent.id === "posventa" || agent.id === "agenda" || shouldHandoffToSales_(message),
+          suggestions: agent.suggestions || [],
+        };
+      }
+
+      continue;
+    }
+
+    if (status !== 429 && status !== 503) break;
   }
 
-  const result = JSON.parse(response.getContentText());
-  const reply = extractAlmaReply_(result);
-  if (!reply) throw new Error("ALMA recibió una respuesta vacía. Inténtalo de nuevo.");
+  if (lastStatus === 429) {
+    throw new Error("ALMA alcanzó temporalmente su límite de consultas. Inténtalo más tarde o contacta al equipo.");
+  }
+  if (lastStatus === 503) {
+    throw new Error("Los modelos de ALMA están saturados en este momento. Inténtalo de nuevo en unos segundos o contacta al equipo.");
+  }
+  throw new Error("ALMA no pudo responder. Verifica la configuración o contacta al equipo.");
 
   return {
     success: true,
