@@ -817,6 +817,7 @@
         <a href="./index.html">Inicio</a>
         <a href="./servicios.html">Servicios</a>
         <a href="./proyectos.html">Proyectos</a>
+        <a href="./portafolio.html">Catálogo</a>
         <a href="./nosotros.html">Nosotros</a>
         <a href="./recompensas.html">Recompensas</a>
         <a href="./index.html#contacto">Contacto</a>
@@ -1264,56 +1265,6 @@
   </footer>
 
   <script>
-    const menuButton = document.getElementById("menu-toggle");
-    const menu = document.getElementById("menu");
-
-    menuButton.hidden = false;
-
-    function closeMenu() {
-      menu.classList.remove("open");
-      menuButton.setAttribute("aria-expanded", "false");
-      menuButton.setAttribute("aria-label", "Abrir menú");
-      menuButton.textContent = "☰";
-    }
-
-    menuButton.addEventListener("click", () => {
-      const expanded =
-        menuButton.getAttribute("aria-expanded") === "true";
-
-      menu.classList.toggle("open", !expanded);
-      menuButton.setAttribute("aria-expanded", String(!expanded));
-      menuButton.setAttribute(
-        "aria-label",
-        expanded ? "Abrir menú" : "Cerrar menú"
-      );
-      menuButton.textContent = expanded ? "☰" : "✕";
-    });
-
-    menu.querySelectorAll("a").forEach(link => {
-      link.addEventListener("click", closeMenu);
-    });
-
-    document.addEventListener("keydown", event => {
-      if (
-        event.key === "Escape" &&
-        menu.classList.contains("open")
-      ) {
-        closeMenu();
-        menuButton.focus();
-      }
-    });
-
-    document.addEventListener("click", event => {
-      if (!event.target.closest(".navigation")) {
-        closeMenu();
-      }
-    });
-
-    const mobileViewport =
-      window.matchMedia("(max-width: 850px)");
-
-    mobileViewport.addEventListener("change", closeMenu);
-
     function createStars(containerId, quantity) {
       const container = document.getElementById(containerId);
 
@@ -1367,38 +1318,43 @@
     const quotationForm =
       document.getElementById("cotizacion");
 
-    quotationForm.addEventListener("submit", event => {
-      event.preventDefault();
+    if (quotationForm) {
+      quotationForm.addEventListener("submit", event => {
+        event.preventDefault();
 
-      if (!quotationForm.reportValidity()) return;
+        if (!quotationForm.reportValidity()) return;
 
-      const data = new FormData(quotationForm);
+        const data = new FormData(quotationForm);
 
-      const field = name =>
-        String(data.get(name) || "").trim();
+        const field = name =>
+          String(data.get(name) || "").trim();
 
-      const message = [
-        "Hola, IPE3 Engineering.",
-        "",
-        "Solicitud: " + field("solicitud"),
-        "Nombre: " + field("nombre"),
-        "Teléfono: " + field("telefono"),
-        "Ciudad: " + field("ciudad"),
-        "Servicio: " + field("servicio"),
-        "",
-        "Detalle:",
-        field("detalle")
-      ].join("\n");
+        const message = [
+          "Hola, IPE3 Engineering.",
+          "",
+          "Solicitud: " + field("solicitud"),
+          "Nombre: " + field("nombre"),
+          "Teléfono: " + field("telefono"),
+          "Ciudad: " + field("ciudad"),
+          "Servicio: " + field("servicio"),
+          "",
+          "Detalle:",
+          field("detalle")
+        ].join("\n");
 
-      const whatsappUrl =
-        "https://wa.me/593984016027?text=" +
-        encodeURIComponent(message);
+        const whatsappUrl =
+          "https://wa.me/593984016027?text=" +
+          encodeURIComponent(message);
 
-      window.location.assign(whatsappUrl);
-    });
+        window.location.assign(whatsappUrl);
+      });
+    }
 
-    document.getElementById("year").textContent =
-      new Date().getFullYear();
+    const yearElement = document.getElementById("year");
+
+    if (yearElement) {
+      yearElement.textContent = new Date().getFullYear();
+    }
   </script>
 </body>
 </html>

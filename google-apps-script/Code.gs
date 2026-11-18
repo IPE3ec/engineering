@@ -756,7 +756,7 @@ function isAllowedAdmin_() {
   const configured = PropertiesService.getScriptProperties().getProperty("ADMIN_EMAILS");
   if (!activeEmail) return false;
   if (!configured) return activeEmail === Session.getEffectiveUser().getEmail();
-  return configured.split(",").map((email) => email.trim().toLower()).indexOf(activeEmail.toLower()) >= 0;
+  return configured.split(",").map((email) => email.trim().toLowerCase()).indexOf(activeEmail.toLowerCase()) >= 0;
 }
 
 function getQuotes() {
