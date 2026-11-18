@@ -8,7 +8,7 @@ const REWARDS_MAINTENANCE_DESCRIPTION =
   "Mantenimiento preventivo básico de 1 equipo en Quito; mano de obra incluida, repuestos y traslados fuera de Quito no incluidos.";
 const ALMA_DEFAULT_MODEL = "gemini-3.6-flash";
 const ALMA_MODEL_FALLBACKS = ["gemini-3.8-flash", "gemini-3.5-flash-lite", "gemini-3.1-flash-lite"];
-const ALMA_BACKEND_VERSION = "2026-11-18.2";
+const ALMA_BACKEND_VERSION = "2026-11-18.3";
 const ALMA_MAX_MESSAGE_LENGTH = 1200;
 const ALMA_MAX_HISTORY_MESSAGES = 8;
 const ALMA_SESSION_REQUEST_LIMIT = 8;
@@ -142,7 +142,7 @@ function handleAlmaRequest_(data) {
       system_instruction: almaSystemInstruction_(agent),
       store: false,
       generation_config: {
-        max_output_tokens: 700,
+        max_output_tokens: 450,
       },
     };
     const response = UrlFetchApp.fetch(
@@ -276,7 +276,7 @@ function selectAlmaAgent_(message) {
 
 function almaSystemInstruction_(agent) {
   const base = [
-    "Eres ALMA, asistente virtual de IPE3 Engineering, en Quito, Ecuador. Responde siempre en español, con tono cordial, claro y breve.",
+    "Eres ALMA, asistente virtual de IPE3 Engineering, en Quito, Ecuador. Responde siempre en español, con tono cordial, claro y breve: máximo 3 frases.",
     agent.focus,
     "Servicios conocidos: proyectos e instalaciones eléctricas, domótica y automatización, seguridad electrónica (CCTV, alarmas y control de accesos), monitoreo y portería virtual, y mantenimiento médico especializado.",
     "La oficina está en Solanda, Quito. IPE3 atiende de lunes a viernes y no trabaja los sábados. Contacto comercial: WhatsApp +593 984 016 027; correo ipe3ecuador@gmail.com.",

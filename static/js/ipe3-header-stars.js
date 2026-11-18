@@ -48,9 +48,9 @@
 
   const CONSENT_STORAGE_KEY = "ipe3-alma-consent-v1";
   const CHAT_STORAGE_KEY = "ipe3-alma-chat-v1";
-  const CORE_PARTICLES = 14;
-  const MAX_HISTORY = 8;
+  const MAX_HISTORY = 6;
   const MAX_MESSAGE_LENGTH = 1200;
+  const REQUEST_TIMEOUT_MS = 45000;
   const WELCOME_MESSAGE =
     "Hola, soy ALMA. Puedo orientarte y conectarte con especialistas comerciales, técnicos o de posventa.";
 
@@ -122,29 +122,26 @@
   `;
   document.body.appendChild(widget);
 
-  function buildCore(container, particles) {
-    const orbit = document.createElement("span");
-    orbit.className = "ipe3-core__orbit";
+  function buildCore(container) {
+    const layers = [
+      "ipe3-core__ring ipe3-core__ring--outer",
+      "ipe3-core__ring ipe3-core__ring--mid",
+      "ipe3-core__sweep",
+      "ipe3-core__core",
+    ];
 
-    for (let index = 0; index < particles; index += 1) {
-      const particle = document.createElement("span");
-      particle.className = "ipe3-core__particle";
-      particle.style.setProperty("--a", `${(360 / particles) * index}deg`);
-      particle.style.setProperty("--r", `${9 + Math.random() * 8}px`);
-      particle.style.setProperty("--d", `${1.4 + Math.random() * 1.8}s`);
-      particle.style.setProperty("--s", `${1 + Math.random() * 1.8}px`);
-      orbit.appendChild(particle);
-    }
+    layers.forEach((className) => {
+      const layer = document.createElement("span");
+      layer.className = className;
+      layer.setAttribute("aria-hidden", "true");
+      container.appendChild(layer);
+    });
 
-    const core = document.createElement("span");
-    core.className = "ipe3-core__core";
+    const core = container.lastElementChild;
 
     core.addEventListener("animationend", () => {
       container.classList.remove("is-bursting");
     });
-
-    container.appendChild(orbit);
-    container.appendChild(core);
   }
 
   const apiEndpoint = "https://script.google.com/macros/s/AKfycbysdWCW_xUoOypezEPFtpv6oSwozlWWHu5hqlwTK1aTMMrgHTdSy-FmoNQeBwURv6sJbw/exec";
@@ -202,7 +199,7 @@
     }
   };
 
-  cores.forEach((core) => buildCore(core, CORE_PARTICLES));
+  cores.forEach((core) => buildCore(core));
 
   const playCoreBurst = () => {
     if (reducedMotion) return;
@@ -366,10 +363,17 @@
     const typing = addTyping();
     setBusy(true);
 
+    const controller =
+      typeof window.AbortController === "function" ? new window.AbortController() : null;
+    const timeoutId = window.setTimeout(() => {
+      if (controller) controller.abort();
+    }, REQUEST_TIMEOUT_MS);
+
     try {
       const response = await fetch(apiEndpoint, {
         method: "POST",
         headers: { "Content-Type": "text/plain;charset=UTF-8" },
+        signal: controller ? controller.signal : undefined,
         body: JSON.stringify({
           type: "alma",
           sessionId: sessionId,
@@ -393,17 +397,21 @@
       if (result.handoff) addContactLink(text);
       if (result.suggestions) updateSuggestions(result.suggestions);
     } catch (error) {
-      agentStatus.textContent = "Conexión interrumpida";
-      onlineStatus.textContent = "Sin conexión";
+      const timedOut = error && (error.name === "AbortError" || error.name === "TimeoutError");
+      agentStatus.textContent = timedOut ? "Respuesta lenta" : "Conexión interrumpida";
+      onlineStatus.textContent = timedOut ? "Reintentar" : "Sin conexión";
       addMessage(
-        error instanceof Error
-          ? error.message
-          : "No se pudo conectar con ALMA. Inténtalo de nuevo o contacta al equipo.",
+        timedOut
+          ? "ALMA está tardando más de lo normal. Puedes reintentar o continuar por WhatsApp con el equipo IPE3."
+          : error instanceof Error
+            ? error.message
+            : "No se pudo conectar con ALMA. Inténtalo de nuevo o contacta al equipo.",
         "assistant"
       );
       addRetry(text);
       addContactLink(text);
     } finally {
+      window.clearTimeout(timeoutId);
       typing.remove();
       setBusy(false);
     }
