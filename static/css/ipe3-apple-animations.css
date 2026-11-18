@@ -1,0 +1,156 @@
+/* =========================================
+   Apple-Style Scroll Animations
+   ========================================= */
+
+/* --- View-timeline (Chrome/Edge 115+) --- */
+@keyframes ipe3-fade-up {
+  from { opacity: 0; transform: translate3d(0, 40px, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@keyframes ipe3-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes ipe3-scale-up {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes ipe3-slide-left {
+  from { opacity: 0; transform: translate3d(48px, 0, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@keyframes ipe3-slide-right {
+  from { opacity: 0; transform: translate3d(-48px, 0, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@keyframes ipe3-blur-in {
+  from { opacity: 0; filter: blur(12px); transform: scale(1.04); }
+  to   { opacity: 1; filter: blur(0);   transform: scale(1); }
+}
+
+/* --- Fallback IntersectionObserver classes --- */
+.ipe3-anim {
+  opacity: 0;
+  will-change: opacity, transform;
+}
+
+.ipe3-anim--fade-up     { animation: ipe3-fade-up     760ms cubic-bezier(0.16,1,0.3,1) forwards; }
+.ipe3-anim--fade-in     { animation: ipe3-fade-in     760ms ease forwards; }
+.ipe3-anim--scale-up    { animation: ipe3-scale-up    760ms cubic-bezier(0.16,1,0.3,1) forwards; }
+.ipe3-anim--slide-left  { animation: ipe3-slide-left  760ms cubic-bezier(0.16,1,0.3,1) forwards; }
+.ipe3-anim--slide-right { animation: ipe3-slide-right 760ms cubic-bezier(0.16,1,0.3,1) forwards; }
+.ipe3-anim--blur-in     { animation: ipe3-blur-in     900ms cubic-bezier(0.16,1,0.3,1) forwards; }
+
+.ipe3-anim--visible {
+  opacity: 1;
+}
+
+/* --- Stagger: children animate in sequence --- */
+.ipe3-anim-stagger > * {
+  opacity: 0;
+}
+
+.ipe3-anim-stagger.ipe3-anim--visible > * {
+  animation: ipe3-fade-up 600ms cubic-bezier(0.16,1,0.3,1) forwards;
+}
+
+.ipe3-anim-stagger.ipe3-anim--visible > *:nth-child(1) { animation-delay: 0ms; }
+.ipe3-anim-stagger.ipe3-anim--visible > *:nth-child(2) { animation-delay: 80ms; }
+.ipe3-anim-stagger.ipe3-anim--visible > *:nth-child(3) { animation-delay: 160ms; }
+.ipe3-anim-stagger.ipe3-anim--visible > *:nth-child(4) { animation-delay: 240ms; }
+.ipe3-anim-stagger.ipe3-anim--visible > *:nth-child(5) { animation-delay: 320ms; }
+.ipe3-anim-stagger.ipe3-anim--visible > *:nth-child(6) { animation-delay: 400ms; }
+
+/* --- Parallax elements --- */
+.ipe3-parallax {
+  will-change: transform;
+  transition: transform 100ms linear;
+}
+
+/* --- Scroll progress bar --- */
+.ipe3-scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 100%;
+  z-index: 9999;
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+  background: linear-gradient(90deg, #00d2ff, #0072ff);
+  pointer-events: none;
+}
+
+/* --- Text word reveal (for headings) --- */
+.ipe3-text-reveal .ipe3-word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 500ms cubic-bezier(0.16,1,0.3,1), transform 500ms cubic-bezier(0.16,1,0.3,1);
+}
+
+.ipe3-text-reveal.ipe3-anim--visible .ipe3-word {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.ipe3-text-reveal.ipe3-anim--visible .ipe3-word:nth-child(1) { transition-delay: 0ms; }
+.ipe3-text-reveal.ipe3-anim--visible .ipe3-word:nth-child(2) { transition-delay: 60ms; }
+.ipe3-text-reveal.ipe3-anim--visible .ipe3-word:nth-child(3) { transition-delay: 120ms; }
+.ipe3-text-reveal.ipe3-anim--visible .ipe3-word:nth-child(4) { transition-delay: 180ms; }
+.ipe3-text-reveal.ipe3-anim--visible .ipe3-word:nth-child(5) { transition-delay: 240ms; }
+.ipe3-text-reveal.ipe3-anim--visible .ipe3-word:nth-child(6) { transition-delay: 300ms; }
+.ipe3-text-reveal.ipe3-anim--visible .ipe3-word:nth-child(7) { transition-delay: 360ms; }
+.ipe3-text-reveal.ipe3-anim--visible .ipe3-word:nth-child(8) { transition-delay: 420ms; }
+.ipe3-text-reveal.ipe3-anim--visible .ipe3-word:nth-child(9) { transition-delay: 480ms; }
+.ipe3-text-reveal.ipe3-anim--visible .ipe3-word:nth-child(10) { transition-delay: 540ms; }
+
+/* --- Native CSS scroll-driven (Chrome 115+) --- */
+@supports (animation-timeline: scroll()) {
+  .ipe3-anim--native {
+    animation: ipe3-fade-up linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 40%;
+  }
+
+  .ipe3-anim--native-scale {
+    animation: ipe3-scale-up linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 35%;
+  }
+
+  .ipe3-anim--native-blur {
+    animation: ipe3-blur-in linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 40%;
+  }
+}
+
+/* --- Reduced motion --- */
+@media (prefers-reduced-motion: reduce) {
+  .ipe3-anim,
+  .ipe3-anim--fade-up,
+  .ipe3-anim--fade-in,
+  .ipe3-anim--scale-up,
+  .ipe3-anim--slide-left,
+  .ipe3-anim--slide-right,
+  .ipe3-anim--blur-in,
+  .ipe3-anim-stagger > *,
+  .ipe3-parallax {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .ipe3-text-reveal .ipe3-word {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

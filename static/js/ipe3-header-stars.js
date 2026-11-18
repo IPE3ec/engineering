@@ -72,8 +72,9 @@
         </div>
       </div>
       <div class="ipe3-alma__suggestions" aria-label="Preguntas sugeridas">
-        <button type="button" data-alma-message="¿Qué servicios ofrece IPE3?">Servicios</button>
         <button type="button" data-alma-message="Quiero solicitar una cotización">Cotizar</button>
+        <button type="button" data-alma-message="No sé qué servicio necesito">Recomendar</button>
+        <button type="button" data-alma-message="Quiero agendar una visita técnica">Agendar visita</button>
         <button type="button" data-alma-message="Necesito soporte técnico">Soporte</button>
       </div>
       <form class="ipe3-alma__form">
@@ -186,6 +187,21 @@
     sendButton.setAttribute("aria-label", busy ? "ALMA está respondiendo" : "Enviar mensaje");
   };
 
+  const updateSuggestions = (suggestions) => {
+    if (!suggestions || !suggestions.length) return;
+    const container = widget.querySelector(".ipe3-alma__suggestions");
+    if (!container) return;
+    container.innerHTML = "";
+    suggestions.forEach((suggestion) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.setAttribute("data-alma-message", suggestion);
+      button.textContent = suggestion;
+      button.addEventListener("click", () => sendMessage(suggestion));
+      container.appendChild(button);
+    });
+  };
+
   const requestReply = async (text, history) => {
     if (!apiEndpoint) {
       agentStatus.textContent = "Conexión pendiente";
@@ -231,6 +247,7 @@
       onlineStatus.textContent = "En línea";
       addMessage(result.reply, "assistant", result.agentName);
       if (result.handoff) addContactLink(text);
+      if (result.suggestions) updateSuggestions(result.suggestions);
     } catch (error) {
       agentStatus.textContent = "Conexión interrumpida";
       onlineStatus.textContent = "Sin conexión";
