@@ -23,6 +23,48 @@ body {
   backdrop-filter: blur(14px);
 }
 
+.ipe3-header-stars {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.ipe3-header-stars .ipe3-star {
+  position: absolute;
+  left: var(--left);
+  top: var(--top);
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  background: #eafcff;
+  box-shadow: 0 0 9px var(--ipe3-cyan);
+  opacity: 0.55;
+  animation:
+    ipe3-star-travel var(--duration) linear infinite alternate,
+    ipe3-star-glow var(--glow-duration) ease-in-out infinite alternate;
+  animation-delay: var(--delay);
+}
+
+@keyframes ipe3-star-travel {
+  from {
+    transform: translate3d(-25px, 12px, 0);
+  }
+  to {
+    transform: translate3d(55px, -15px, 0);
+  }
+}
+
+@keyframes ipe3-star-glow {
+  from {
+    opacity: 0.15;
+  }
+  to {
+    opacity: 0.9;
+  }
+}
+
 .ipe3-header-inner {
   position: relative;
   z-index: 1;
@@ -177,5 +219,11 @@ body {
 
   .ipe3-nav a {
     font-size: 13px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ipe3-header-stars .ipe3-star {
+    animation: none;
   }
 }
