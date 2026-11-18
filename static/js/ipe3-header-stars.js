@@ -129,8 +129,6 @@
     const layers = [
       "ipe3-core__ring ipe3-core__ring--outer",
       "ipe3-core__ring ipe3-core__ring--mid",
-      "ipe3-core__sweep",
-      "ipe3-core__core",
     ];
 
     layers.forEach((className) => {
@@ -140,11 +138,139 @@
       container.appendChild(layer);
     });
 
-    const core = container.lastElementChild;
+    createDust(container);
+
+    const core = document.createElement("span");
+    core.className = "ipe3-core__core";
+    core.setAttribute("aria-hidden", "true");
+    container.appendChild(core);
 
     core.addEventListener("animationend", () => {
       container.classList.remove("is-bursting");
     });
+  }
+
+  function createDust(container) {
+    const canvas = document.createElement("canvas");
+    canvas.className = "ipe3-core__dust";
+    canvas.setAttribute("aria-hidden", "true");
+    container.appendChild(canvas);
+
+    const context = canvas.getContext("2d");
+    if (!context) return;
+
+    const sprite = document.createElement("canvas");
+    const spriteSize = 16;
+    sprite.width = spriteSize;
+    sprite.height = spriteSize;
+    const spriteContext = sprite.getContext("2d");
+    if (!spriteContext) return;
+
+    const glow = spriteContext.createRadialGradient(8, 8, 0, 8, 8, 8);
+    glow.addColorStop(0, "rgba(255, 255, 255, 1)");
+    glow.addColorStop(0.32, "rgba(237, 233, 254, 0.92)");
+    glow.addColorStop(0.66, "rgba(167, 139, 250, 0.38)");
+    glow.addColorStop(1, "rgba(167, 139, 250, 0)");
+    spriteContext.fillStyle = glow;
+    spriteContext.fillRect(0, 0, spriteSize, spriteSize);
+
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const raf =
+      typeof window.requestAnimationFrame === "function"
+        ? window.requestAnimationFrame.bind(window)
+        : (callback) => window.setTimeout(() => callback(performance.now()), 16);
+    const caf =
+      typeof window.cancelAnimationFrame === "function"
+        ? window.cancelAnimationFrame.bind(window)
+        : (handle) => window.clearTimeout(handle);
+    const particleCount = 22;
+    let particles = [];
+    let width = 42;
+    let frame = 0;
+
+    const buildParticles = () => {
+      particles = Array.from({ length: particleCount }, () => ({
+        angle: Math.random() * Math.PI * 2,
+        orbit: 0.24 + Math.random() * 0.62,
+        size: 0.55 + Math.random() * 1.15,
+        phase: Math.random() * Math.PI * 2,
+        speed: 0.4 + Math.random() * 1.1,
+        drift: (Math.random() - 0.5) * 0.22,
+      }));
+    };
+
+    const resize = () => {
+      const rect = container.getBoundingClientRect();
+      const size = Math.max(24, Math.round(rect.width || 42));
+      const ratio = Math.min(window.devicePixelRatio || 1, 2);
+      width = size;
+      canvas.width = Math.round(size * ratio);
+      canvas.height = Math.round(size * ratio);
+      canvas.style.width = `${size}px`;
+      canvas.style.height = `${size}px`;
+      context.setTransform(ratio, 0, 0, ratio, 0, 0);
+      draw(performance.now());
+    };
+
+    const draw = (time) => {
+      const half = width / 2;
+      const boost = container.classList.contains("is-thinking") ? 1.9 : 1;
+      context.clearRect(0, 0, width, width);
+
+      particles.forEach((particle) => {
+        const angle =
+          particle.angle +
+          time * 0.00013 * particle.speed * boost +
+          particle.drift * Math.sin(time * 0.0004 + particle.phase);
+        const twinkle = 0.42 + 0.58 * (0.5 + 0.5 * Math.sin(time * 0.0017 * particle.speed * boost + particle.phase));
+        const radius = half * particle.orbit;
+        const size = particle.size * 3 * (0.75 + twinkle * 0.7);
+
+        context.globalAlpha = Math.min(1, twinkle);
+        context.drawImage(
+          sprite,
+          half + Math.cos(angle) * radius - size / 2,
+          half + Math.sin(angle) * radius - size / 2,
+          size,
+          size
+        );
+      });
+
+      context.globalAlpha = 1;
+    };
+
+    const loop = (time) => {
+      draw(time);
+      frame = raf(loop);
+    };
+
+    const start = () => {
+      if (frame || reducedMotion || document.hidden) return;
+      frame = raf(loop);
+    };
+
+    const stop = () => {
+      if (!frame) return;
+      caf(frame);
+      frame = 0;
+    };
+
+    buildParticles();
+    resize();
+
+    if (typeof window.ResizeObserver === "function") {
+      new window.ResizeObserver(() => resize()).observe(container);
+    } else {
+      window.addEventListener("resize", resize);
+    }
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) stop();
+      else start();
+    });
+
+    if (reducedMotion) draw(0);
+    else start();
   }
 
   const panel = widget.querySelector(".ipe3-alma__panel");

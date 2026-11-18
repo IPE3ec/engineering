@@ -982,12 +982,23 @@ header.ipe3-alma__header {
 }
 
 .ipe3-core__ring,
-.ipe3-core__sweep,
+.ipe3-core__dust,
 .ipe3-core__core {
   position: absolute;
   border-radius: 50%;
   pointer-events: none;
+}
+
+.ipe3-core__ring,
+.ipe3-core__core {
   will-change: transform, opacity;
+}
+
+.ipe3-core__dust {
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .ipe3-core__ring--outer {
@@ -1022,20 +1033,6 @@ header.ipe3-alma__header {
   animation: ipe3-core-spin 7s linear infinite reverse;
 }
 
-.ipe3-core__sweep {
-  inset: -2px;
-  background: conic-gradient(
-    from 0deg,
-    rgba(167, 139, 250, 0.34) 0deg,
-    rgba(167, 139, 250, 0) 54deg,
-    transparent 360deg
-  );
-  -webkit-mask: radial-gradient(circle, transparent 34%, #000 42%);
-  mask: radial-gradient(circle, transparent 34%, #000 42%);
-  opacity: 0.5;
-  animation: ipe3-core-spin 3.4s linear infinite;
-}
-
 .ipe3-core__core {
   top: 50%;
   left: 50%;
@@ -1067,11 +1064,6 @@ header.ipe3-alma__header {
 
 [data-core].is-thinking .ipe3-core__ring--mid {
   animation-duration: 1.5s;
-}
-
-[data-core].is-thinking .ipe3-core__sweep {
-  animation-duration: 1.2s;
-  opacity: 0.9;
 }
 
 [data-core].is-thinking .ipe3-core__core {
