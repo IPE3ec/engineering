@@ -8,6 +8,7 @@ const REWARDS_MAINTENANCE_DESCRIPTION =
   "Mantenimiento preventivo básico de 1 equipo en Quito; mano de obra incluida, repuestos y traslados fuera de Quito no incluidos.";
 const ALMA_DEFAULT_MODEL = "gemini-3.6-flash";
 const ALMA_MODEL_FALLBACKS = ["gemini-3.8-flash", "gemini-3.5-flash-lite", "gemini-3.1-flash-lite"];
+const ALMA_BACKEND_VERSION = "2026-11-18.2";
 const ALMA_MAX_MESSAGE_LENGTH = 1200;
 const ALMA_MAX_HISTORY_MESSAGES = 8;
 const ALMA_SESSION_REQUEST_LIMIT = 8;
@@ -61,6 +62,7 @@ function doPost(request) {
   } catch (error) {
     return jsonOutput_({
       success: false,
+      version: ALMA_BACKEND_VERSION,
       message: error.message || "No se pudo procesar la solicitud.",
     });
   }
@@ -166,6 +168,7 @@ function handleAlmaRequest_(data) {
       if (reply) {
         return {
           success: true,
+          version: ALMA_BACKEND_VERSION,
           agent: agent.id,
           agentName: agent.name,
           reply: reply.slice(0, 4000),
