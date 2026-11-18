@@ -52,7 +52,7 @@ const IPE3_QUOTE_ENDPOINT = "PEGAR_URL_EXEC_AQUI";
 const apiEndpoint = "PEGAR_URL_EXEC_AQUI";
 ```
 
-La segunda URL conecta ALMA con Gemini; la clave permanece en las propiedades privadas de Apps Script. La página solicita consentimiento antes de enviar cada consulta. Las cotizaciones conservan el flujo existente: fotos y PDFs se guardan en `IPE3_Cotizaciones` de Drive y los datos en `IPE3 - Cotizaciones` de Sheets.
+La segunda URL conecta ALMA con el proveedor de IA; la clave permanece en las propiedades privadas de Apps Script. La página muestra el aviso `aviso-ia.html` y solo permite consultar después de aceptarlo; la aceptación se recuerda en el navegador. Las cotizaciones conservan el flujo existente: fotos y PDFs se guardan en `IPE3_Cotizaciones` de Drive y los datos en `IPE3 - Cotizaciones` de Sheets.
 
 ## 6. Activar el programa de puntos y la PWA
 
