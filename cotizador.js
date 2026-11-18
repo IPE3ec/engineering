@@ -1,4 +1,4 @@
-const IPE3_QUOTE_ENDPOINT = "https://script.google.com/macros/s/AKfycbxZLPj4yyRaVFSUwK5vIOGACAr6xxIR-YGoBUCA-FxGQIkxnbHjca7Zm0v2ArXvcRS5KA/exec";
+const IPE3_QUOTE_ENDPOINT = "https://script.google.com/macros/s/AKfycbyX45umYkGFsO5CIMk5K8Ut_kKtzT5LKyVfhT2Mh-U04ber6WNuOLslOcYrbegJ1cbTEg/exec";
 
 const quoteModal = document.getElementById("quoteModal");
 const quoteForm = document.getElementById("quoteForm");
