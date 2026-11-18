@@ -47,7 +47,7 @@
   if (document.querySelector(".ipe3-alma")) return;
 
   const CONSENT_STORAGE_KEY = "ipe3-alma-consent-v1";
-  const PYRAMID_ROWS = 5;
+  const CORE_PARTICLES = 14;
 
   const widget = document.createElement("div");
   widget.className = "ipe3-alma";
@@ -55,7 +55,7 @@
     <section class="ipe3-alma__panel" id="ipe3-alma-panel" role="dialog"
       aria-labelledby="ipe3-alma-title" aria-describedby="ipe3-alma-note" hidden>
       <header class="ipe3-alma__header">
-        <span class="ipe3-alma__avatar" aria-hidden="true" data-pyramid></span>
+        <span class="ipe3-alma__avatar" aria-hidden="true" data-core></span>
         <span class="ipe3-alma__identity">
           <strong id="ipe3-alma-title">ALMA</strong>
           <small id="ipe3-alma-agent">Especialistas IPE3 · IA</small>
@@ -97,7 +97,7 @@
     </section>
     <button class="ipe3-alma__launcher" type="button"
       aria-controls="ipe3-alma-panel" aria-expanded="false" aria-label="Abrir asistente ALMA">
-      <span class="ipe3-alma__launcher-orb" aria-hidden="true" data-pyramid></span>
+      <span class="ipe3-alma__launcher-orb" aria-hidden="true" data-core></span>
       <span class="ipe3-alma__launcher-label">
         <strong>ALMA</strong>
         <small>Asistente inteligente</small>
@@ -106,26 +106,29 @@
   `;
   document.body.appendChild(widget);
 
-  function buildPyramid(container, rows) {
-    const fragment = document.createDocumentFragment();
-    let voxelIndex = 0;
+  function buildCore(container, particles) {
+    const orbit = document.createElement("span");
+    orbit.className = "ipe3-core__orbit";
 
-    for (let row = 1; row <= rows; row += 1) {
-      const rowElement = document.createElement("span");
-      rowElement.className = "ipe3-voxel-row";
-
-      for (let column = 0; column < row; column += 1) {
-        const voxel = document.createElement("span");
-        voxel.className = "ipe3-voxel";
-        voxel.style.setProperty("--i", String(voxelIndex));
-        voxelIndex += 1;
-        rowElement.appendChild(voxel);
-      }
-
-      fragment.appendChild(rowElement);
+    for (let index = 0; index < particles; index += 1) {
+      const particle = document.createElement("span");
+      particle.className = "ipe3-core__particle";
+      particle.style.setProperty("--a", `${(360 / particles) * index}deg`);
+      particle.style.setProperty("--r", `${9 + Math.random() * 8}px`);
+      particle.style.setProperty("--d", `${1.4 + Math.random() * 1.8}s`);
+      particle.style.setProperty("--s", `${1 + Math.random() * 1.8}px`);
+      orbit.appendChild(particle);
     }
 
-    container.appendChild(fragment);
+    const core = document.createElement("span");
+    core.className = "ipe3-core__core";
+
+    core.addEventListener("animationend", () => {
+      container.classList.remove("is-bursting");
+    });
+
+    container.appendChild(orbit);
+    container.appendChild(core);
   }
 
   const apiEndpoint = "https://script.google.com/macros/s/AKfycbxig1xTGc2x7qeFUjlTzYZPBVt-5Whc-orDBqAc31nTmGFjkaGIMHMBAql59EUhi6lE8g/exec";
@@ -140,7 +143,7 @@
   const acceptButton = widget.querySelector("#ipe3-alma-accept");
   const agentStatus = widget.querySelector("#ipe3-alma-agent");
   const onlineStatus = widget.querySelector("#ipe3-alma-status");
-  const pyramids = widget.querySelectorAll("[data-pyramid]");
+  const cores = widget.querySelectorAll("[data-core]");
 
   let consentAccepted = false;
   try {
@@ -149,15 +152,15 @@
     consentAccepted = false;
   }
 
-  pyramids.forEach((pyramid) => buildPyramid(pyramid, PYRAMID_ROWS));
+  cores.forEach((core) => buildCore(core, CORE_PARTICLES));
 
-  const playPyramidBuild = () => {
+  const playCoreBurst = () => {
     if (reducedMotion) return;
 
-    pyramids.forEach((pyramid) => {
-      pyramid.classList.remove("is-forming");
-      void pyramid.offsetWidth;
-      pyramid.classList.add("is-forming");
+    cores.forEach((core) => {
+      core.classList.remove("is-bursting");
+      void core.offsetWidth;
+      core.classList.add("is-bursting");
     });
   };
 
@@ -169,7 +172,7 @@
   };
 
   applyConsentState();
-  playPyramidBuild();
+  playCoreBurst();
 
   const sessionId =
     window.crypto && typeof window.crypto.randomUUID === "function"
@@ -186,7 +189,7 @@
     document.body.classList.toggle("ipe3-alma-active", open);
 
     if (open) {
-      playPyramidBuild();
+      playCoreBurst();
       input.focus();
     } else {
       launcher.focus();

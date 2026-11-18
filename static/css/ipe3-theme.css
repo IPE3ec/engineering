@@ -789,46 +789,110 @@ header.ipe3-alma__header {
   outline-offset: 3px;
 }
 
-.ipe3-alma__avatar [data-pyramid],
-.ipe3-alma__launcher-orb [data-pyramid] {
-  display: flex;
+.ipe3-alma__avatar [data-core],
+.ipe3-alma__launcher-orb [data-core] {
+  position: relative;
+  display: block;
   width: 100%;
   height: 100%;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1px;
-  padding: 4px;
 }
 
-.ipe3-voxel-row {
-  display: flex;
-  justify-content: center;
-  gap: 1px;
+.ipe3-core__orbit {
+  position: absolute;
+  inset: 0;
+  animation: ipe3-core-spin 18s linear infinite;
 }
 
-.ipe3-voxel {
-  width: 4px;
-  height: 4px;
-  border-radius: 1px;
-  background: linear-gradient(180deg, #ffffff, #e9e3ff 46%, #a78bfa);
-  box-shadow: 0 0 4px rgba(233, 227, 255, 0.85);
-  transform-origin: center bottom;
+.ipe3-core__particle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--s, 2px);
+  height: var(--s, 2px);
+  margin: calc(var(--s, 2px) / -2) 0 0 calc(var(--s, 2px) / -2);
+  border-radius: 50%;
+  background: #fff;
+  box-shadow:
+    0 0 5px rgba(255, 255, 255, 0.95),
+    0 0 9px rgba(167, 139, 250, 0.85);
+  transform: rotate(var(--a, 0deg)) translateX(var(--r, 12px));
+  animation: ipe3-core-twinkle var(--d, 2s) ease-in-out infinite alternate;
 }
 
-.is-forming .ipe3-voxel {
-  animation: ipe3-voxel-build 360ms cubic-bezier(0.22, 1, 0.36, 1) both;
-  animation-delay: calc(var(--i, 0) * 45ms);
+.ipe3-core__core {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 7px;
+  height: 7px;
+  margin: -3.5px 0 0 -3.5px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ffffff 20%, #ddd6fe 58%, rgba(167, 139, 250, 0) 74%);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.9);
+  animation: ipe3-core-pulse 2.8s ease-in-out infinite;
 }
 
-@keyframes ipe3-voxel-build {
+[data-core].is-bursting .ipe3-core__particle {
+  animation: ipe3-core-burst 540ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+[data-core].is-bursting .ipe3-core__core {
+  animation: ipe3-core-flash 540ms ease-out both;
+}
+
+@keyframes ipe3-core-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes ipe3-core-twinkle {
   from {
-    opacity: 0;
-    transform: translateY(-7px) scale(0.25);
+    opacity: 0.3;
   }
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes ipe3-core-pulse {
+  0%,
+  100% {
+    opacity: 0.85;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.3);
+  }
+}
+
+@keyframes ipe3-core-burst {
+  0% {
+    opacity: 0.25;
+    transform: rotate(var(--a, 0deg)) translateX(calc(var(--r, 12px) * 1.9)) scale(0.4);
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: rotate(var(--a, 0deg)) translateX(var(--r, 12px)) scale(1);
+  }
+}
+
+@keyframes ipe3-core-flash {
+  0% {
+    opacity: 0.2;
+    transform: scale(0.2);
+  }
+  45% {
+    opacity: 1;
+    transform: scale(2.2);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
   }
 }
 
