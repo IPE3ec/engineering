@@ -112,7 +112,7 @@
   `;
   document.body.appendChild(widget);
 
-  const apiEndpoint = "";
+  const apiEndpoint = "https://script.google.com/macros/s/AKfycbxig1xTGc2x7qeFUjlTzYZPBVt-5Whc-orDBqAc31nTmGFjkaGIMHMBAql59EUhi6lE8g/exec";
   const whatsappNumber = "593984016027";
   const panel = widget.querySelector(".ipe3-alma__panel");
   const launcher = widget.querySelector(".ipe3-alma__launcher");
